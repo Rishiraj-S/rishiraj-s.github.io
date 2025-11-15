@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Voronoi Tool — Map players to pitch</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f5f0;
+      color: #4a3427;
+    }
+    header { 
+      display: flex; 
+      flex-direction: column;
+      align-items: center; 
+      justify-content: center;
+      margin-bottom: 25px;
+      padding: 25px 20px;
+      background: linear-gradient(135deg, #8b5a2b 0%, #6f4518 100%);
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(107, 68, 35, 0.3);
+      text-align: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #d2691e, #a0522d, #8b4513);
+    }
+    .header-content {
+      z-index: 1;
+    }
+    .website-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0 0 10px 0;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      letter-spacing: 0.5px;
+    }
+    .header-description {
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto 15px;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+    .attribution {
+      font-size: 0.95rem;
+      margin-top: 8px;
+      opacity: 0.85;
+      font-style: italic;
+    }
+    .attribution a {
+      color: #ffd700;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+    .attribution a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+    .language-selector {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: rgba(255, 255, 255, 0.15);
+      padding: 8px 15px;
+      border-radius: 30px;
+      backdrop-filter: blur(5px);
+      margin-top: 10px;
+    }
+    canvas { 
+      border: 1px solid #c19a6b; 
+      margin: 10px 0; 
+      max-width: 100%; 
+      height: auto; 
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 3px 8px rgba(107, 68, 35, 0.1);
+    }
+    table, th, td { 
+      border: 1px solid #c19a6b; 
+      border-collapse: collapse; 
+      padding: 10px; 
+      font-size: 0.95rem; 
+    }
+    th {
+      background-color: #8b5a2b;
+      color: white;
+      font-weight: 600;
+    }
+    td {
+      background-color: #f9f5f0;
+    }
+    #status { 
+      font-weight: 600; 
+      margin: 12px 0; 
+      color: #4a3427; 
+      padding: 12px 15px;
+      background-color: #e6d2c3;
+      border-radius: 8px;
+      border-left: 5px solid #8b5a2b;
+      box-shadow: 0 2px 5px rgba(107, 68, 35, 0.1);
+    }
+    .row { 
+      display: flex; 
+      gap: 20px; 
+      flex-wrap: wrap; 
+      align-items: flex-start; 
+      margin-bottom: 20px;
+    }
+    .col { 
+      flex: 1 1 300px; 
+      min-width: 260px; 
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(107, 68, 35, 0.15);
+      border: 1px solid #e6d2c3;
+    }
+    button { 
+      padding: 12px 20px; 
+      margin-top: 10px; 
+      background: linear-gradient(to bottom, #8b5a2b, #6f4518);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 6px rgba(107, 68, 35, 0.2);
+    }
+    button:hover {
+      background: linear-gradient(to bottom, #9c6d3c, #7d5523);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 10px rgba(107, 68, 35, 0.3);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    input[type=file] { 
+      margin: 8px 0; 
+      padding: 10px;
+      border: 1px solid #c19a6b;
+      border-radius: 6px;
+      width: 100%;
+      background-color: #f9f5f0;
+    }
+    h3 {
+      color: #6f4518;
+      margin-top: 20px;
+      font-size: 1.4rem;
+      border-bottom: 2px solid #e6d2c3;
+      padding-bottom: 8px;
+    }
+    .canvas-label {
+      font-size: 0.95rem;
+      color: #6f4518;
+      margin-top: 10px;
+      text-align: center;
+      font-weight: 500;
+    }
+    .file-input-container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(107, 68, 35, 0.15);
+      margin-bottom: 20px;
+      border: 1px solid #e6d2c3;
+    }
+    .player-selection-container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(107, 68, 35, 0.15);
+      margin-bottom: 20px;
+      border: 1px solid #e6d2c3;
+    }
+    .player-selection-row {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+    .player-selection-item {
+      flex: 1;
+      min-width: 200px;
+    }
+    .player-selection-item label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #6f4518;
+    }
+    .table-container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(107, 68, 35, 0.15);
+      margin-bottom: 20px;
+      border: 1px solid #e6d2c3;
+      overflow-x: auto;
+    }
+    select {
+      padding: 8px 15px;
+      border: 1px solid #c19a6b;
+      border-radius: 6px;
+      background-color: #f9f5f0;
+      color: #4a3427;
+      font-weight: 500;
+      width: 100%;
+    }
+    .file-status {
+      font-weight: 600;
+      color: #8b5a2b;
+    }
+    @media (max-width: 700px){ 
+      .row { flex-direction: column; }
+      header { padding: 20px 15px; }
+      .website-title { font-size: 2rem; }
+      .header-description { font-size: 1rem; }
+      .player-selection-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-content">
+    <h1 class="website-title">Voronoi Tool — Map Players to Pitch</h1>
+    <div class="header-description" id="description">Upload a match image and a top-down pitch image, pick matching points and then mark players + ball.</div>
+    <div class="attribution" id="attributionText">
+      This tool is an extension of the tool built by Anselmo Ruiz de Alarcón Quintero 
+      <a href="https://www.anselmoraqsoccer.com/diapositivas" target="_blank">@anselmoraq</a>.
+    </div>
+  </div>
+  <div class="language-selector">
+    <label for="languageSelect" id="languageLabel">Language:</label>
+    <select id="languageSelect">
+      <option value="en">English</option>
+      <option value="es">Español</option>
+    </select>
+  </div>
+</header>
+
+<div class="file-input-container">
+  <input type="file" id="juegoInput" accept="image/*">
+  <span id="img1info" class="file-status">Upload game image</span><br>
+  <input type="file" id="terrenoInput" accept="image/*">
+  <span id="img2info" class="file-status">Upload pitch image</span><br>
+</div>
+
+<div class="player-selection-container">
+  <div class="player-selection-row">
+    <div class="player-selection-item">
+      <label for="localPlayersSelect" id="localPlayersLabel">Number of Local Players Visible:</label>
+      <select id="localPlayersSelect">
+        <option value="11">11 players</option>
+        <option value="10">10 players</option>
+        <option value="9">9 players</option>
+        <option value="8">8 players</option>
+        <option value="7">7 players</option>
+        <option value="6">6 players</option>
+        <option value="5">5 players</option>
+        <option value="4">4 players</option>
+        <option value="3">3 players</option>
+        <option value="2">2 players</option>
+        <option value="1">1 player</option>
+      </select>
+    </div>
+    <div class="player-selection-item">
+      <label for="visitorPlayersSelect" id="visitorPlayersLabel">Number of Visitor Players Visible:</label>
+      <select id="visitorPlayersSelect">
+        <option value="11">11 players</option>
+        <option value="10">10 players</option>
+        <option value="9">9 players</option>
+        <option value="8">8 players</option>
+        <option value="7">7 players</option>
+        <option value="6">6 players</option>
+        <option value="5">5 players</option>
+        <option value="4">4 players</option>
+        <option value="3">3 players</option>
+        <option value="2">2 players</option>
+        <option value="1">1 player</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div id="status">Waiting for images and reference points...</div>
+
+<div class="row">
+  <div class="col">
+    <canvas id="canvasJuego" width="500" height="500"></canvas>
+    <div class="canvas-label" id="canvas1Label">Game canvas (click for game points / players)</div>
+  </div>
+
+  <div class="col">
+    <canvas id="canvasTerreno" width="500" height="325"></canvas>
+    <div class="canvas-label" id="canvas2Label">Pitch canvas (click for equivalent points)</div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+    <canvas id="canvasResultado" width="500" height="325"></canvas>
+    <div class="canvas-label" id="canvas3Label">Result: transformed players</div>
+  </div>
+  <div class="col">
+    <canvas id="canvasVoronoi" width="500" height="325"></canvas>
+    <div class="canvas-label" id="canvas4Label">Voronoi on the pitch</div>
+  </div>
+</div>
+
+<div class="table-container">
+  <h3 id="coordinatesTitle">Transformed Coordinates</h3>
+  <table style="width:100%; max-width:1000px;">
+    <thead>
+      <tr>
+        <th id="typeHeader">Type</th>
+        <th id="xMeterHeader">x m</th>
+        <th id="yMeterHeader">y m</th>
+        <th id="xGameHeader">x game</th>
+        <th id="yGameHeader">y game</th>
+        <th id="xPitchHeader">x pitch</th>
+        <th id="yPitchHeader">y pitch</th>
+      </tr>
+    </thead>
+    <tbody id="tablaTransformados"></tbody>
+  </table>
+</div>
+
+<button id="exportBtn">Export to Excel</button>
+
+<!-- Libraries -->
+<script src="https://docs.opencv.org/4.x/opencv.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+<script src="https://unpkg.com/d3-delaunay@6" defer></script>
+
+<script>
+/*
+  voronoi_tool.html
+  - Click workflow:
+    1) Upload game image and terrain image
+    2) Click 4..8 corresponding points on game canvas (order matters)
+    3) Click the matching points on terrain canvas (same order)
+    4) After homography computed, click players based on dropdown selection
+*/
+
+let cvReady = false, homografia = null;
+let puntosJuego = [], puntosTerreno = [], puntosJugadores = [];
+let etapa = "juego_puntos";
+let localPlayersCount = 11;
+let visitorPlayersCount = 11;
+
+const anchoCanvas = 500, altoCanvas = 325;
+const escalaX = 105 / anchoCanvas; // pitch length meters / canvas width
+const escalaY = 68 / altoCanvas;   // pitch width meters / canvas height
+
+const canvasJuego = document.getElementById("canvasJuego");
+const canvasTerreno = document.getElementById("canvasTerreno");
+const canvasResultado = document.getElementById("canvasResultado");
+const canvasVoronoi = document.getElementById("canvasVoronoi");
+
+const ctxJuego = canvasJuego.getContext("2d");
+const ctxTerreno = canvasTerreno.getContext("2d");
+const ctxResultado = canvasResultado.getContext("2d");
+const ctxVoronoi = canvasVoronoi.getContext("2d");
+
+let imgJuego = new Image(), imgTerreno = new Image();
+
+// Language texts
+const texts = {
+  en: {
+    description: "Upload a match image and a top-down pitch image, pick matching points and then mark players + ball.",
+    attribution: "This tool is an extension of the tool built by Anselmo Ruiz de Alarcón Quintero <a href=\"https://www.anselmoraqsoccer.com/diapositivas\" target=\"_blank\">@anselmoraq</a>.",
+    img1info: "Upload game image",
+    img2info: "Upload pitch image",
+    localPlayersLabel: "Number of Local Players Visible:",
+    visitorPlayersLabel: "Number of Visitor Players Visible:",
+    statusWaiting: "Waiting for images and reference points...",
+    canvas1Label: "Game canvas (click for game points / players)",
+    canvas2Label: "Pitch canvas (click for equivalent points)",
+    canvas3Label: "Result: transformed players",
+    canvas4Label: "Voronoi on the pitch",
+    coordinatesTitle: "Transformed Coordinates",
+    typeHeader: "Type",
+    xMeterHeader: "x m",
+    yMeterHeader: "y m",
+    xGameHeader: "x game",
+    yGameHeader: "y game",
+    xPitchHeader: "x pitch",
+    yPitchHeader: "y pitch",
+    exportBtn: "Export to Excel",
+    languageLabel: "Language:",
+    gamePointSelected: "Game: point {n} selected",
+    pitchPointSelected: "Pitch: point {n} selected",
+    need4Points: "Select at least 4 points in the game image first.",
+    addLocal: "Add {n} LOCAL players",
+    addVisitor: "Add {n} VISITOR players",
+    addBall: "Add BALL position",
+    complete: "All points captured. Showing results...",
+    homographyReady: "Homography calculated. Now add {n} LOCAL players.",
+    homographyError: "Error calculating homography. Check points.",
+    opencvReady: "OpenCV ready. Select 4–8 points in the game image.",
+    noData: "No data to export",
+    gameImageLoaded: "Game image loaded ✅",
+    pitchImageLoaded: "Pitch image loaded ✅"
+  },
+  es: {
+    description: "Suba una imagen de juego y una imagen de terreno, seleccione puntos equivalentes y luego marque jugadores + balón.",
+    attribution: "Esta herramienta es una extensión de la herramienta construida por Anselmo Ruiz de Alarcón Quintero <a href=\"https://www.anselmoraqsoccer.com/diapositivas\" target=\"_blank\">@anselmoraq</a>.",
+    img1info: "Introduzca imagen de juego",
+    img2info: "Introduzca imagen de terreno",
+    localPlayersLabel: "Número de Jugadores Locales Visibles:",
+    visitorPlayersLabel: "Número de Jugadores Visitantes Visibles:",
+    statusWaiting: "Esperando imágenes y puntos de referencia...",
+    canvas1Label: "Canvas de juego (clics para puntos juego / jugadores)",
+    canvas2Label: "Canvas terreno (clics para puntos equivalentes)",
+    canvas3Label: "Resultado: jugadores transformados",
+    canvas4Label: "Voronoi sobre el terreno",
+    coordinatesTitle: "Coordenadas Transformadas",
+    typeHeader: "Tipo",
+    xMeterHeader: "x m",
+    yMeterHeader: "y m",
+    xGameHeader: "x juego",
+    yGameHeader: "y juego",
+    xPitchHeader: "x terreno",
+    yPitchHeader: "y terreno",
+    exportBtn: "Exportar a Excel",
+    languageLabel: "Idioma:",
+    gamePointSelected: "Juego: punto {n} seleccionado",
+    pitchPointSelected: "Terreno: punto {n} seleccionado",
+    need4Points: "Selecciona al menos 4 puntos en la imagen de juego primero.",
+    addLocal: "Añade {n} jugadores LOCAL",
+    addVisitor: "Añade {n} jugadores VISITANTE",
+    addBall: "Añade posición del BALÓN",
+    complete: "Todos los puntos capturados. Mostrando resultados...",
+    homographyReady: "Homografía calculada. Ahora añade {n} jugadores LOCAL.",
+    homographyError: "Error calculando homografía. Revisa puntos.",
+    opencvReady: "OpenCV listo. Selecciona 4–8 puntos en la imagen de juego.",
+    noData: "No hay datos para exportar",
+    gameImageLoaded: "Imagen de jugada cargada ✅",
+    pitchImageLoaded: "Imagen de terreno cargada ✅"
+  }
+};
+
+let currentLang = 'en';
+
+// Function to update all text content based on selected language
+function updateLanguage() {
+  const lang = document.getElementById('languageSelect').value;
+  currentLang = lang;
+  const t = texts[lang];
+  
+  document.getElementById('description').textContent = t.description;
+  document.getElementById('attributionText').innerHTML = t.attribution;
+  document.getElementById('img1info').textContent = t.img1info;
+  document.getElementById('img2info').textContent = t.img2info;
+  document.getElementById('localPlayersLabel').textContent = t.localPlayersLabel;
+  document.getElementById('visitorPlayersLabel').textContent = t.visitorPlayersLabel;
+  document.getElementById('canvas1Label').textContent = t.canvas1Label;
+  document.getElementById('canvas2Label').textContent = t.canvas2Label;
+  document.getElementById('canvas3Label').textContent = t.canvas3Label;
+  document.getElementById('canvas4Label').textContent = t.canvas4Label;
+  document.getElementById('coordinatesTitle').textContent = t.coordinatesTitle;
+  document.getElementById('typeHeader').textContent = t.typeHeader;
+  document.getElementById('xMeterHeader').textContent = t.xMeterHeader;
+  document.getElementById('yMeterHeader').textContent = t.yMeterHeader;
+  document.getElementById('xGameHeader').textContent = t.xGameHeader;
+  document.getElementById('yGameHeader').textContent = t.yGameHeader;
+  document.getElementById('xPitchHeader').textContent = t.xPitchHeader;
+  document.getElementById('yPitchHeader').textContent = t.yPitchHeader;
+  document.getElementById('exportBtn').textContent = t.exportBtn;
+  document.getElementById('languageLabel').textContent = t.languageLabel;
+  
+  // Update status if it's one of the standard messages
+  const status = document.getElementById('status').textContent;
+  if (status === texts['en'].statusWaiting || status === texts['es'].statusWaiting) {
+    updateStatus(t.statusWaiting);
+  }
+}
+
+// Language selector event listener
+document.getElementById('languageSelect').addEventListener('change', updateLanguage);
+
+// Player count selectors
+document.getElementById('localPlayersSelect').addEventListener('change', function() {
+  localPlayersCount = parseInt(this.value);
+});
+
+document.getElementById('visitorPlayersSelect').addEventListener('change', function() {
+  visitorPlayersCount = parseInt(this.value);
+});
+
+document.getElementById("juegoInput").addEventListener("change", e => {
+  const f = e.target.files[0];
+  if(!f) return;
+  const reader = new FileReader();
+  reader.onload = evt => { 
+    imgJuego.src = evt.target.result; 
+    document.getElementById('img1info').textContent = texts[currentLang].gameImageLoaded; 
+  };
+  reader.readAsDataURL(f);
+});
+document.getElementById("terrenoInput").addEventListener("change", e => {
+  const f = e.target.files[0];
+  if(!f) return;
+  const reader = new FileReader();
+  reader.onload = evt => { 
+    imgTerreno.src = evt.target.result; 
+    document.getElementById('img2info').textContent = texts[currentLang].pitchImageLoaded; 
+  };
+  reader.readAsDataURL(f);
+});
+
+imgJuego.onload = () => {
+  // fit into canvasJuego (canvasJuego height is 500 in markup)
+  ctxJuego.clearRect(0,0,canvasJuego.width,canvasJuego.height);
+  ctxJuego.drawImage(imgJuego, 0, 0, canvasJuego.width, canvasJuego.height);
+};
+imgTerreno.onload = () => {
+  ctxTerreno.clearRect(0,0,canvasTerreno.width,canvasTerreno.height);
+  ctxResultado.clearRect(0,0,canvasResultado.width,canvasResultado.height);
+  ctxVoronoi.clearRect(0,0,canvasVoronoi.width,canvasVoronoi.height);
+  ctxTerreno.drawImage(imgTerreno, 0, 0, canvasTerreno.width, canvasTerreno.height);
+  ctxResultado.drawImage(imgTerreno, 0, 0, canvasResultado.width, canvasResultado.height);
+  ctxVoronoi.drawImage(imgTerreno, 0, 0, canvasVoronoi.width, canvasVoronoi.height);
+};
+
+function getClickCoords(e, canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  return [(e.clientX - rect.left) * scaleX, (e.clientY - rect.top) * scaleY];
+}
+
+function drawPoint(ctx, x, y, color, label = null) {
+  ctx.fillStyle = color;
+  ctx.beginPath(); ctx.arc(x, y, 6, 0, 2 * Math.PI); ctx.fill();
+  if (label) {
+    ctx.fillStyle = "black"; ctx.font = "12px Arial";
+    ctx.fillText(label, x + 8, y - 6);
+  }
+}
+
+canvasJuego.addEventListener("click", e => {
+  const [x,y] = getClickCoords(e, canvasJuego);
+  if (etapa === "juego_puntos" && puntosJuego.length < 8) {
+    puntosJuego.push([x,y]);
+    drawPoint(ctxJuego, x, y, "yellow", puntosJuego.length);
+    updateStatus(texts[currentLang].gamePointSelected.replace('{n}', puntosJuego.length));
+    return;
+  }
+  if (["local","visitante","balon"].includes(etapa)) {
+    registrarJugador(x,y);
+  }
+});
+
+canvasTerreno.addEventListener("click", e => {
+  const [x,y] = getClickCoords(e, canvasTerreno);
+  if (puntosJuego.length < 4) {
+    updateStatus(texts[currentLang].need4Points);
+    return;
+  }
+  if (etapa === "juego_puntos") etapa = "terreno_puntos";
+  if (etapa === "terreno_puntos" && puntosTerreno.length < puntosJuego.length) {
+    puntosTerreno.push([x,y]);
+    drawPoint(ctxTerreno, x, y, "yellow", puntosTerreno.length);
+    updateStatus(texts[currentLang].pitchPointSelected.replace('{n}', puntosTerreno.length));
+    if (puntosTerreno.length === puntosJuego.length && cvReady) calcularHomografia();
+  }
+});
+
+function updateStatus(msg) {
+  document.getElementById("status").textContent = msg;
+}
+
+function registrarJugador(x, y) {
+  const count = t => puntosJugadores.filter(p => p.tipo === t).length;
+  let tipo = "", color = "", etiqueta = "";
+  
+  if (etapa === "local" && count("local") < localPlayersCount) {
+    tipo = "local"; 
+    color = "blue"; 
+    etiqueta = `l ${count("local") + 1}`;
+    if (count("local") === localPlayersCount - 1) etapa = "visitante";
+  } else if (etapa === "visitante" && count("visitante") < visitorPlayersCount) {
+    tipo = "visitante"; 
+    color = "red"; 
+    etiqueta = `v ${count("visitante") + 1}`;
+    if (count("visitante") === visitorPlayersCount - 1) etapa = "balon";
+  } else if (etapa === "balon" && count("balon") < 1) {
+    tipo = "balon"; 
+    color = "black"; 
+    etiqueta = "B";
+    etapa = "completo";
+    updateStatus(texts[currentLang].complete);
+  }
+  
+  if (tipo) {
+    puntosJugadores.push({ tipo, x, y, etiqueta });
+    drawPoint(ctxJuego, x, y, color, etiqueta);
+  }
+  
+  if (etapa === "local") {
+    updateStatus(texts[currentLang].addLocal.replace('{n}', localPlayersCount - count("local")));
+  } else if (etapa === "visitante") {
+    updateStatus(texts[currentLang].addVisitor.replace('{n}', visitorPlayersCount - count("visitante")));
+  } else if (etapa === "balon") {
+    updateStatus(texts[currentLang].addBall);
+  } else if (etapa === "completo") {
+    mostrarResultado();
+  }
+}
+
+function calcularHomografia() {
+  if (!cvReady) { updateStatus("OpenCV no está listo aún."); return; }
+  if (puntosJuego.length < 4 || puntosTerreno.length < 4) {
+    updateStatus("Necesitas al menos 4 puntos correspondientes en cada imagen.");
+    return;
+  }
+  const src = cv.matFromArray(puntosJuego.length, 1, cv.CV_32FC2, puntosJuego.flat());
+  const dst = cv.matFromArray(puntosTerreno.length, 1, cv.CV_32FC2, puntosTerreno.flat());
+  const mask = new cv.Mat();
+  try {
+    homografia = cv.findHomography(src, dst, cv.RANSAC);
+    updateStatus(texts[currentLang].homographyReady.replace('{n}', localPlayersCount));
+    etapa = "local";
+  } catch (err) {
+    console.error(err);
+    updateStatus(texts[currentLang].homographyError + "\n" + err);
+  } finally {
+    src.delete(); dst.delete(); mask.delete();
+  }
+}
+
+function aplicarHomografia(pt) {
+  if (!homografia) return [NaN, NaN];
+  const src = cv.matFromArray(1, 1, cv.CV_32FC2, pt);
+  const dst = new cv.Mat();
+  cv.perspectiveTransform(src, dst, homografia);
+  const res = dst.data32F;
+  src.delete(); dst.delete();
+  return [res[0], res[1]];
+}
+
+function mostrarResultado() {
+  // redraw base terrain
+  ctxResultado.drawImage(imgTerreno, 0, 0, canvasResultado.width, canvasResultado.height);
+  ctxVoronoi.drawImage(imgTerreno, 0, 0, canvasVoronoi.width, canvasVoronoi.height);
+
+  const transformados = puntosJugadores.map(p => {
+    const [xT, yT] = aplicarHomografia([p.x, p.y]);
+    return { ...p, xT, yT, xM: xT * escalaX, yM: yT * escalaY };
+  });
+
+  for (let p of transformados) {
+    const c = p.tipo === "local" ? "blue" : p.tipo === "visitante" ? "red" : "black";
+    drawPoint(ctxResultado, p.xT, p.yT, c);
+  }
+
+  drawVoronoi(transformados);
+  actualizarTabla(transformados);
+  puntosJugadores = transformados;
+}
+
+function drawVoronoi(puntos) {
+  const sitios = puntos.filter(p => p.tipo !== "balon");
+  if (sitios.length === 0) return;
+  const sites = sitios.map(p => [p.xT, p.yT]);
+  const delaunay = d3.Delaunay.from(sites);
+  const vor = delaunay.voronoi([0,0, canvasVoronoi.width, canvasVoronoi.height]);
+
+  for (let i = 0; i < sites.length; i++) {
+    const cell = vor.cellPolygon(i);
+    if (!cell) continue;
+    const tipo = sitios[i].tipo;
+    ctxVoronoi.beginPath();
+    ctxVoronoi.moveTo(cell[0][0], cell[0][1]);
+    for (let j = 1; j < cell.length; j++) ctxVoronoi.lineTo(cell[j][0], cell[j][1]);
+    ctxVoronoi.closePath();
+    ctxVoronoi.fillStyle = tipo === "local" ? "rgba(0,0,255,0.14)" : "rgba(255,0,0,0.14)";
+    ctxVoronoi.fill();
+  }
+
+  for (let p of puntos) {
+    const c = p.tipo === "local" ? "blue" : p.tipo === "visitante" ? "red" : "black";
+    drawPoint(ctxVoronoi, p.xT, p.yT, c, p.etiqueta);
+  }
+}
+
+function actualizarTabla(puntos) {
+  const tb = document.getElementById("tablaTransformados");
+  tb.innerHTML = "";
+  for (let p of puntos) {
+    const xM = isFinite(p.xM) ? p.xM.toFixed(2).replace('.', ',') : '—';
+    const yM = isFinite(p.yM) ? (68 - p.yM).toFixed(2).replace('.', ',') : '—';
+    tb.innerHTML += `<tr><td>${p.etiqueta || p.tipo}</td>
+      <td>${xM}</td><td>${yM}</td>
+      <td>${p.x.toFixed(1).replace('.', ',')}</td>
+      <td>${p.y.toFixed(1).replace('.', ',')}</td>
+      <td>${isFinite(p.xT) ? p.xT.toFixed(1).replace('.', ',') : '—'}</td>
+      <td>${isFinite(p.yT) ? p.yT.toFixed(1).replace('.', ',') : '—'}</td></tr>`;
+  }
+}
+
+document.getElementById("exportBtn").addEventListener("click", () => {
+  if (!puntosJugadores || puntosJugadores.length === 0) return alert(texts[currentLang].noData);
+  const data = puntosJugadores.map(p => ({
+    Tipo: p.etiqueta || p.tipo,
+    "x_metros": isFinite(p.xM) ? p.xM.toFixed(2) : '',
+    "y_metros": isFinite(p.yM) ? (68 - p.yM).toFixed(2) : '',
+    "x_juego": p.x.toFixed(2),
+    "y_juego": p.y.toFixed(2),
+    "x_terreno": isFinite(p.xT) ? p.xT.toFixed(2) : '',
+    "y_terreno": isFinite(p.yT) ? p.yT.toFixed(2) : ''
+  }));
+  const sheet = XLSX.utils.json_to_sheet(data);
+  const book = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(book, sheet, "Transformados");
+  XLSX.writeFile(book, "coordenadas_transformadas.xlsx");
+});
+
+// OpenCV ready
+window.Module = {
+  onRuntimeInitialized() {
+    cvReady = true;
+    etapa = "juego_puntos";
+    updateStatus(texts[currentLang].opencvReady);
+  }
+};
+</script>
+
+</body>
+</html>
