@@ -25,6 +25,8 @@ Static site deployed via GitHub Pages. No framework, no build step, no package m
 - `projects/*.html` — individual project detail pages; use `body class="portfolio-details-page"` and reference assets via `../assets/`
 - `thank-you.html` — contact form redirect target
 - `projects/voronoi_tool.html` — standalone interactive tool with its own inline CSS/JS, not using the shared template
+- `projects/event_tagger.html` — standalone football event tagging tool with its own inline CSS/JS
+- `projects/3d.html` — standalone 3D tracking visualizer; loads default data from `projects/data/` and default pitch image from `assets/img/football-pitch.png`
 
 **Styling:**
 

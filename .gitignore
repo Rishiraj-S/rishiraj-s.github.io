@@ -1,0 +1,19 @@
+# OS artifacts
+.DS_Store
+**/.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Editor directories
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+
+# Local environment
+.env
+.env.local
