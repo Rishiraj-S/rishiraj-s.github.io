@@ -1,0 +1,896 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FC Barcelona 2-0 Real Madrid — 2nd Goal Build-up | 3D Simulation</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <style>
+    :root {
+      --surface:   #0D1117;
+      --surface-2: #1A1A2E;
+      --border:    rgba(255,255,255,0.08);
+      --text:      #E0D8CC;
+      --muted:     #9E8E78;
+      --accent:    #E8B84B;
+      --bar:       #004D98;
+      --rma:       #00529F;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, Arial, sans-serif; background: var(--surface); color: var(--text); min-height: 100vh; overflow: hidden; }
+
+    /* ── Header ── */
+    .hdr {
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 18px;
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+      height: 50px;
+    }
+    .hdr-title { font-size: 17px; font-weight: 800; letter-spacing: 0.4px; white-space: nowrap; }
+    .chip {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.4px;
+      padding: 3px 10px; border-radius: 999px;
+      border: 1px solid rgba(232,184,75,0.3);
+      color: var(--accent); background: rgba(232,184,75,0.08);
+      white-space: nowrap;
+    }
+    .score { background: var(--accent); color: #1A1000; font-weight: 900; font-size: 15px; padding: 3px 13px; border-radius: 999px; }
+    .hdr-hint { margin-left: auto; font-size: 11px; color: var(--muted); }
+
+    /* ── Main layout ── */
+    .main { display: flex; height: calc(100vh - 50px); }
+
+    /* ── 3D viewport ── */
+    #vc {
+      flex: 1; min-width: 0; position: relative; background: #0D1117;
+    }
+    #vc canvas { display: block; }
+
+    /* ── HUD ── */
+    #hud {
+      position: absolute; top: 12px; left: 12px;
+      pointer-events: none; z-index: 10;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .hud-card {
+      background: rgba(26,26,46,0.90);
+      border: 1px solid rgba(232,184,75,0.28);
+      border-radius: 10px; padding: 9px 14px;
+      backdrop-filter: blur(6px);
+    }
+    .hud-step  { font-size: 9px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--accent); margin-bottom: 3px; }
+    .hud-name  { font-size: 15px; font-weight: 800; color: var(--text); }
+    .hud-desc  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    /* ── Goal overlay ── */
+    #goalOverlay {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none; z-index: 30; opacity: 0; transition: opacity 0.4s;
+    }
+    #goalOverlay.show { opacity: 1; }
+    .goal-txt {
+      font-size: 68px; font-weight: 900; letter-spacing: 6px;
+      color: var(--accent);
+      text-shadow: 0 0 50px rgba(232,184,75,0.9), 0 4px 24px rgba(0,0,0,0.9);
+      animation: gPulse 0.55s ease-in-out infinite alternate;
+    }
+    @keyframes gPulse { from { transform: scale(1); } to { transform: scale(1.06); } }
+
+    /* ── Legend ── */
+    #legend {
+      position: absolute; top: 12px; right: 12px;
+      background: rgba(26,26,46,0.85); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 12px;
+      font-size: 11px; backdrop-filter: blur(4px);
+      pointer-events: none; z-index: 10;
+    }
+    .leg-row { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; }
+    .leg-row:last-child { margin-bottom: 0; }
+    .leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── Bottom controls ── */
+    #ctrl {
+      position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+      background: rgba(26,26,46,0.92); border: 1px solid var(--border);
+      border-radius: 12px; padding: 9px 16px;
+      display: flex; gap: 10px; align-items: center;
+      z-index: 15; backdrop-filter: blur(4px);
+      white-space: nowrap;
+    }
+    .cbtn {
+      padding: 7px 15px; border: none; border-radius: 8px;
+      background: var(--accent); color: #1A1000;
+      font-size: 12px; font-weight: 800; cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .cbtn:hover { background: #f0c860; }
+    .cbtn:active { transform: scale(0.97); }
+    .cbtn.sec { background: rgba(255,255,255,0.08); color: var(--text); }
+    .cbtn.sec:hover { background: rgba(255,255,255,0.14); }
+    .prog-wrap { display: flex; align-items: center; gap: 8px; }
+    .prog-bar { width: 150px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 999px; overflow: hidden; }
+    .prog-fill { height: 100%; background: var(--accent); border-radius: 999px; width: 0%; transition: width 0.15s; }
+    .prog-lbl { font-size: 11px; color: var(--muted); }
+    select.ctrl-spd {
+      background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+      color: var(--text); border-radius: 6px; padding: 4px 8px;
+      font-size: 11px; cursor: pointer;
+    }
+
+    /* ── Right panel ── */
+    .panel {
+      width: 230px; flex-shrink: 0;
+      background: var(--surface-2); border-left: 1px solid var(--border);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .panel-hdr {
+      padding: 11px 14px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+      color: var(--accent); border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; background: var(--surface-2); flex-shrink: 0;
+    }
+    .panel-scroll { overflow-y: auto; flex: 1; }
+    .ei {
+      padding: 9px 14px; border-bottom: 1px solid var(--border);
+      cursor: pointer; display: flex; gap: 9px; align-items: flex-start;
+      transition: background 0.1s;
+    }
+    .ei:hover { background: rgba(255,255,255,0.04); }
+    .ei.active { background: rgba(232,184,75,0.08); border-left: 3px solid var(--accent); padding-left: 11px; }
+    .ei.done { opacity: 0.45; }
+    .ei-time { font-size: 11px; color: var(--muted); font-family: monospace; padding-top: 1px; flex-shrink: 0; }
+    .ei-name { font-size: 13px; font-weight: 700; }
+    .ei-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .ei.goal .ei-name    { color: var(--accent); }
+    .ei.carry .ei-name   { color: #88ccff; }
+    .ei.carry .ei-desc   { color: #E8B84B; }
+    .ei.chipped .ei-desc { color: #7DF9FF; }
+
+    @media (max-width: 680px) { .panel { display: none; } .hdr-hint { display: none; } }
+  </style>
+</head>
+
+<body>
+
+<div class="hdr">
+  <div class="hdr-title">
+    <span style="color:#004D98;">FC Barcelona</span>
+    <span style="color:#ccc;"> vs </span>
+    <span style="color:#00529F;">Real Madrid</span>
+  </div>
+  <div class="score">2 – 0</div>
+  <div class="chip">⚽ Ferran Torres 17' — final 30s</div>
+  <div class="chip">LaLiga · 10 May 2026</div>
+  <div class="hdr-hint">Drag: rotate · Scroll: zoom · Right-click: pan</div>
+</div>
+
+<div class="main">
+
+  <!-- 3D viewport -->
+  <div id="vc">
+
+    <div id="hud">
+      <div class="hud-card">
+        <div class="hud-step" id="hudStep">PRESS PLAY TO START</div>
+        <div class="hud-name"  id="hudName">2nd Goal Build-up</div>
+        <div class="hud-desc"  id="hudDesc">17:15 → 17:45 — final 30 seconds</div>
+      </div>
+    </div>
+
+    <div id="goalOverlay">
+      <div class="goal-txt">⚽ GOAL!</div>
+    </div>
+
+    <div id="legend">
+      <div class="leg-row"><div class="leg-dot" style="background:#004D98;"></div><span>FC Barcelona</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#f2f2f2; border:1px solid #555;"></div><span>Ball</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#FFD700;"></div><span>Ball carrier</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#ffffff; border:1px solid #888;"></div><span>Ground pass</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#7DF9FF;"></div><span>Chipped / through ball</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#E8B84B;"></div><span>Carry</span></div>
+    </div>
+
+    <div id="ctrl">
+      <button class="cbtn"     id="playBtn">▶ Play</button>
+      <button class="cbtn sec" id="resetBtn">↺ Reset</button>
+      <div class="prog-wrap">
+        <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+        <span class="prog-lbl" id="progLbl">0 / 14</span>
+      </div>
+      <select class="ctrl-spd" id="spd">
+        <option value="0.75">0.75×</option>
+        <option value="1" selected>1×</option>
+        <option value="1.5">1.5×</option>
+        <option value="2">2×</option>
+      </select>
+    </div>
+
+  </div>
+
+  <!-- Right panel -->
+  <div class="panel">
+    <div class="panel-hdr">Build-up — Passes &amp; Carries</div>
+    <div class="panel-scroll" id="evtLog"></div>
+  </div>
+
+</div><!-- .main -->
+
+<script>
+(() => {
+'use strict';
+
+// ── Match data (from parquet) ──────────────────────────────────────────────
+// Opta F24: x 0–100 (own goal→opponent goal), y 0–100 (top→bottom touchline)
+// Barcelona attacks toward increasing x (right goal in Opta → +x in THREE.js)
+
+// passType: 'ground' | 'chipped' | 'chipped_through'
+// arcH: arc peak height in metres (from Opta qualifiers + length)
+// Ground passes: h = clamp(length * 0.05, 0.3, 1.5)  — almost flat
+// Chipped: tall parabola proportional to distance
+// Carries are inferred from receipt pos ≠ next pass origin
+// 30-second window ending at the goal (17:15 → 17:45)
+const EVENTS = [
+  // Rashford → Eric García: ground, 8.7 m
+  { type:'pass',  passType:'ground',           arcH:0.5, min:17, sec:15, player:'M. Rashford',   sx:67.9, sy: 9.1, ex:75.7, ey: 4.8 },
+  { type:'carry',                                        min:17, sec:17, player:'Eric García',   sx:75.7, sy: 4.8, ex:73.9, ey: 6.0 },
+  // Eric García → Cubarsí: ground, 14.7 m
+  { type:'pass',  passType:'ground',           arcH:0.7, min:17, sec:19, player:'Eric García',   sx:73.9, sy: 6.0, ex:62.5, ey:18.5 },
+  { type:'carry',                                        min:17, sec:22, player:'Pau Cubarsí',   sx:62.5, sy:18.5, ex:62.6, ey:32.4 },
+  // Cubarsí → Pedri: ground, 4.4 m
+  { type:'pass',  passType:'ground',           arcH:0.3, min:17, sec:28, player:'Pau Cubarsí',   sx:62.6, sy:32.4, ex:63.1, ey:26.0 },
+  { type:'carry',                                        min:17, sec:30, player:'Pedri',         sx:63.1, sy:26.0, ex:63.2, ey:18.6 },
+  // Pedri → Eric García: ground, 5.8 m
+  { type:'pass',  passType:'ground',           arcH:0.3, min:17, sec:31, player:'Pedri',         sx:63.2, sy:18.6, ex:59.9, ey:11.8 },
+  { type:'carry',                                        min:17, sec:32, player:'Eric García',   sx:59.9, sy:11.8, ex:58.1, ey:11.2 },
+  // Eric García → Cubarsí: ground, 15.1 m
+  { type:'pass',  passType:'ground',           arcH:0.8, min:17, sec:33, player:'Eric García',   sx:58.1, sy:11.2, ex:52.8, ey:31.8 },
+  { type:'carry',                                        min:17, sec:33, player:'Pau Cubarsí',   sx:52.8, sy:31.8, ex:52.4, ey:32.4 },
+  // Cubarsí → Gerard Martín: ground, 17.2 m
+  { type:'pass',  passType:'ground',           arcH:0.9, min:17, sec:34, player:'Pau Cubarsí',   sx:52.4, sy:32.4, ex:52.3, ey:57.7 },
+  { type:'carry',                                        min:17, sec:36, player:'Gerard Martín', sx:52.3, sy:57.7, ex:61.6, ey:75.3 },
+  // Gerard Martín → Fermín: ground cross, 19.2 m
+  { type:'pass',  passType:'ground',           arcH:1.0, min:17, sec:38, player:'Gerard Martín', sx:61.6, sy:75.3, ex:73.9, ey:96.1 },
+  { type:'carry',                                        min:17, sec:40, player:'Fermín López',  sx:73.9, sy:96.1, ex:74.2, ey:95.6 },
+  // Fermín → Dani Olmo: Chipped + Through ball, 26.2 m
+  { type:'pass',  passType:'chipped_through',  arcH:7.0, min:17, sec:41, player:'Fermín López',  sx:74.2, sy:95.6, ex:88.7, ey:64.3 },
+  { type:'carry',                                        min:17, sec:42, player:'Dani Olmo',     sx:88.7, sy:64.3, ex:88.9, ey:64.1 },
+  // Dani Olmo → Ferran Torres: ground assist, 5.4 m
+  { type:'pass',  passType:'ground',           arcH:0.3, min:17, sec:43, player:'Dani Olmo',     sx:88.9, sy:64.1, ex:87.5, ey:56.4 },
+  { type:'carry',                                        min:17, sec:44, player:'Ferran Torres', sx:87.5, sy:56.4, ex:88.4, ey:53.2 },
+  { type:'goal',                                         min:17, sec:45, player:'Ferran Torres', sx:88.4, sy:53.2, ex:100,  ey:47.3, goalMouthH:0.6173 },
+];
+
+
+const PW = 105, PH = 68;
+const BALL_R = 0.11;
+
+// ── Coordinate conversion ─────────────────────────────────────────────────
+// Opta (0-100, 0-100) → THREE world (pitch centered at origin, 105×68 m)
+function o2t(ox, oy) {
+  return {
+    x: (ox / 100 * PW) - PW / 2,
+    z: -(((oy / 100 * PH) - PH / 2)),
+  };
+}
+
+// Parabolic arc position at t ∈ [0,1]
+function arcAt(ev, t) {
+  const s = o2t(ev.sx, ev.sy), e = o2t(ev.ex, ev.ey);
+  const dx = e.x - s.x, dz = e.z - s.z;
+  if (ev.type === 'carry') return { x: s.x + dx * t, y: 0, z: s.z + dz * t };
+  if (ev.type === 'goal') {
+    const endH = ev.goalMouthH ?? 0;
+    return { x: s.x + dx * t, y: endH * t + 5.5 * Math.sin(Math.PI * t), z: s.z + dz * t };
+  }
+  return { x: s.x + dx * t, y: (ev.arcH ?? 1.5) * Math.sin(Math.PI * t), z: s.z + dz * t };
+}
+
+function arcPoints(ev, N = 64) {
+  const pts = [];
+  const yOff = ev.type === 'carry' ? 0.06 : 0; // ground line sits just above pitch
+  for (let i = 0; i <= N; i++) {
+    const p = arcAt(ev, i / N);
+    pts.push(new THREE.Vector3(p.x, p.y + yOff, p.z));
+  }
+  return pts;
+}
+
+function carryDistM(ev) {
+  const s = o2t(ev.sx, ev.sy), e = o2t(ev.ex, ev.ey);
+  return Math.hypot(e.x - s.x, e.z - s.z);
+}
+
+// ── THREE scene ───────────────────────────────────────────────────────────
+const vc = document.getElementById('vc');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#0D1117');
+
+const W0 = vc.clientWidth || 900, H0 = vc.clientHeight || 600;
+const camera = new THREE.PerspectiveCamera(52, W0 / H0, 0.1, 500);
+camera.position.set(22, 40, 68);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(W0, H0);
+renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+vc.appendChild(renderer.domElement);
+renderer.domElement.style.touchAction = 'none';
+
+const orb = new THREE.OrbitControls(camera, renderer.domElement);
+orb.enableDamping = true;
+orb.dampingFactor = 0.07;
+orb.target.set(22, 0, 5);
+orb.minDistance = 12;
+orb.maxDistance = 220;
+orb.maxPolarAngle = Math.PI * 0.49;
+orb.touches = { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN };
+orb.update();
+
+// Lighting
+scene.add(new THREE.HemisphereLight(0xffffff, 0x223344, 0.9));
+const sun = new THREE.DirectionalLight(0xffffff, 0.95);
+sun.position.set(30, 80, 40);
+scene.add(sun);
+
+// ── Pitch texture ─────────────────────────────────────────────────────────
+function makePitchTex() {
+  const TW = 1050, TH = 680;
+  const c = document.createElement('canvas');
+  c.width = TW; c.height = TH;
+  const g = c.getContext('2d');
+
+  // Alternating stripes
+  const stripes = 7;
+  for (let i = 0; i < stripes; i++) {
+    g.fillStyle = i % 2 === 0 ? '#075f1c' : '#086621';
+    g.fillRect(i * TW / stripes, 0, TW / stripes, TH);
+  }
+
+  const lw = 5;
+  g.strokeStyle = 'rgba(255,255,255,0.92)';
+  g.lineWidth = lw;
+
+  // Boundary
+  g.strokeRect(lw / 2, lw / 2, TW - lw, TH - lw);
+
+  // Halfway line
+  g.beginPath(); g.moveTo(TW / 2, 0); g.lineTo(TW / 2, TH); g.stroke();
+
+  // Centre circle
+  const cx = TW / 2, cy = TH / 2;
+  g.beginPath(); g.arc(cx, cy, (TH / 2) * (9.15 / 34), 0, Math.PI * 2); g.stroke();
+  g.fillStyle = 'rgba(255,255,255,0.92)';
+  g.beginPath(); g.arc(cx, cy, lw, 0, Math.PI * 2); g.fill();
+
+  function rM(x0, y0, w, h) {
+    g.strokeRect((x0 / PW) * TW, TH - ((y0 + h) / PH) * TH, (w / PW) * TW, (h / PH) * TH);
+  }
+  function dM(x, y) {
+    g.beginPath(); g.arc((x / PW) * TW, TH - (y / PH) * TH, lw, 0, Math.PI * 2); g.fill();
+  }
+
+  // Penalty areas
+  rM(0, (PH - 40.32) / 2, 16.5, 40.32);
+  rM(PW - 16.5, (PH - 40.32) / 2, 16.5, 40.32);
+  // Six-yard boxes
+  rM(0, (PH - 18.32) / 2, 5.5, 18.32);
+  rM(PW - 5.5, (PH - 18.32) / 2, 5.5, 18.32);
+  // Penalty spots
+  dM(11, PH / 2); dM(PW - 11, PH / 2);
+
+  // Penalty arcs
+  function penArc(cx2, cy2, toRight) {
+    const R = 9.15, lineX = toRight ? 16.5 : PW - 16.5;
+    const dx = lineX - cx2, ins = R * R - dx * dx;
+    if (ins <= 0) return;
+    const dy = Math.sqrt(ins), sc = TW / PW;
+    const px = (cx2 / PW) * TW, py = TH - (cy2 / PH) * TH, Rp = R * sc;
+    const θ = Math.atan2(dy, Math.abs(dx));
+    g.beginPath();
+    g.arc(px, py, Rp, toRight ? -θ : Math.PI - θ, toRight ? θ : Math.PI + θ, false);
+    g.stroke();
+  }
+  penArc(11, PH / 2, true); penArc(PW - 11, PH / 2, false);
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.anisotropy = 8;
+  return tex;
+}
+
+// Pitch plane
+const pitchMesh = new THREE.Mesh(
+  new THREE.PlaneGeometry(PW, PH),
+  new THREE.MeshStandardMaterial({ map: makePitchTex(), roughness: 1, metalness: 0 })
+);
+pitchMesh.rotation.x = -Math.PI / 2;
+scene.add(pitchMesh);
+
+// Border grass
+const border = new THREE.Mesh(
+  new THREE.PlaneGeometry(PW + 4, PH + 4),
+  new THREE.MeshStandardMaterial({ color: 0x084d18, roughness: 1 })
+);
+border.rotation.x = -Math.PI / 2;
+border.position.y = -0.01;
+scene.add(border);
+
+// ── Goals ─────────────────────────────────────────────────────────────────
+function buildGoal(gx, outSign) {
+  const goalH = 2.44, goalW = 7.32, halfW = goalW / 2;
+  const postR = 0.06, netD = 2.0;
+  const grp = new THREE.Group();
+  const postMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.35 });
+  const netMat = new THREE.MeshBasicMaterial({
+    color: 0xffffff, transparent: true, opacity: 0.13,
+    wireframe: true, depthWrite: false, side: THREE.DoubleSide,
+  });
+
+  const mkPost = (x, y, z) => {
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(postR, postR, goalH, 16), postMat);
+    m.position.set(x, y, z); return m;
+  };
+  const mkBar = (x, y, z, len = goalW) => {
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(postR, postR, len, 16), postMat);
+    m.rotation.x = Math.PI / 2; m.position.set(x, y, z); return m;
+  };
+
+  grp.add(mkPost(gx, goalH / 2, -halfW));
+  grp.add(mkPost(gx, goalH / 2, +halfW));
+  grp.add(mkBar(gx, goalH, 0));
+  grp.add(mkPost(gx + outSign * netD, goalH / 2, -halfW));
+  grp.add(mkPost(gx + outSign * netD, goalH / 2, +halfW));
+  grp.add(mkBar(gx + outSign * netD, goalH, 0));
+  grp.add(mkBar(gx + outSign * netD, postR, 0));
+
+  const net = new THREE.Mesh(new THREE.BoxGeometry(netD, goalH, goalW), netMat);
+  net.position.set(gx + outSign * netD / 2, goalH / 2, 0);
+  grp.add(net);
+
+  grp.position.y = 0.01;
+  scene.add(grp);
+  return grp;
+}
+buildGoal(-PW / 2, -1);
+buildGoal(+PW / 2, +1);
+
+// ── Player meshes ─────────────────────────────────────────────────────────
+function makeLabel(text, colorHex) {
+  const c = document.createElement('canvas');
+  c.width = 320; c.height = 68;
+  const g = c.getContext('2d');
+  g.font = 'bold 30px Arial';
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.lineWidth = 7;
+  g.strokeStyle = 'rgba(0,0,0,0.95)';
+  g.strokeText(text, 160, 34);
+  g.fillStyle = colorHex;
+  g.fillText(text, 160, 34);
+  const tex = new THREE.CanvasTexture(c);
+  const spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false }));
+  spr.scale.set(4.6, 1.0, 1);
+  spr.position.y = 2.4;
+  return spr;
+}
+
+function buildPlayerMesh(colorHex) {
+  const grp = new THREE.Group();
+  const mat     = new THREE.MeshStandardMaterial({ color: new THREE.Color(colorHex), roughness: 0.65 });
+  const shortsMat = new THREE.MeshStandardMaterial({ color: new THREE.Color(colorHex).clone().offsetHSL(0, 0, -0.22), roughness: 0.65 });
+  const skinMat = new THREE.MeshStandardMaterial({ color: 0xf0c49a, roughness: 0.85 });
+
+  // Legs (shorts-colored)
+  const legH = 0.88;
+  const legGeo = new THREE.CylinderGeometry(0.072, 0.072, legH, 10);
+  [-0.105, 0.105].forEach(xOff => {
+    const leg = new THREE.Mesh(legGeo, shortsMat.clone());
+    leg.position.set(xOff, legH / 2, 0);
+    grp.add(leg);
+  });
+
+  // Torso (kit color — this is the "body" used for highlight)
+  const torsoH = 0.62;
+  const torso = new THREE.Mesh(
+    new THREE.BoxGeometry(0.42, torsoH, 0.22),
+    mat
+  );
+  torso.position.y = legH + torsoH / 2; // 1.19
+  torso.userData.isBody = true;
+  grp.add(torso);
+
+  // Arms (kit color, angled slightly outward/down)
+  const armGeo = new THREE.CylinderGeometry(0.052, 0.052, 0.54, 8);
+  [[-0.30, Math.PI / 5], [0.30, -Math.PI / 5]].forEach(([xOff, rot]) => {
+    const arm = new THREE.Mesh(armGeo, mat.clone());
+    arm.rotation.z = rot;
+    arm.position.set(xOff, legH + torsoH / 2, 0);
+    grp.add(arm);
+  });
+
+  // Head
+  const headR = 0.165;
+  const head = new THREE.Mesh(
+    new THREE.SphereGeometry(headR, 14, 12),
+    skinMat
+  );
+  head.position.y = legH + torsoH + headR; // 1.645
+  grp.add(head);
+
+  // Ground shadow
+  const shadow = new THREE.Mesh(
+    new THREE.CircleGeometry(0.30, 20),
+    new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.22 })
+  );
+  shadow.rotation.x = -Math.PI / 2; shadow.position.y = 0.01;
+  grp.add(shadow);
+
+  return grp;
+}
+
+const playerReg = new Map(); // name → { grp, defaultColor, body, targetX, targetZ }
+
+// For each player: sorted list of event indices they appear in (used to look ahead)
+const playerEventSeq = new Map();
+EVENTS.forEach((ev, i) => {
+  if (!playerEventSeq.has(ev.player)) playerEventSeq.set(ev.player, []);
+  playerEventSeq.get(ev.player).push(i);
+});
+
+const PLAYER_SPEED = 6; // m/s — jog pace
+
+function ensurePlayer(name, colorHex, ox, oy) {
+  const { x, z } = o2t(ox, oy);
+  if (!playerReg.has(name)) {
+    const grp = buildPlayerMesh(colorHex);
+    const shortName = name.split(' ').slice(-1)[0];
+    grp.add(makeLabel(shortName, '#ffffff'));
+    scene.add(grp);
+    const body = grp.children.find(c => c.userData?.isBody);
+    grp.position.set(x, 0, z); // snap on first creation
+    playerReg.set(name, { grp, defaultColor: colorHex, body, targetX: x, targetZ: z });
+  }
+}
+
+// Set smooth target — player will jog there over time
+function movePlayer(name, ox, oy) {
+  const entry = playerReg.get(name);
+  if (!entry) return;
+  const { x, z } = o2t(ox, oy);
+  entry.targetX = x;
+  entry.targetZ = z;
+}
+
+// Hard snap used only at reset / initial placement
+function snapPlayer(name, ox, oy) {
+  const entry = playerReg.get(name);
+  if (!entry) return;
+  const { x, z } = o2t(ox, oy);
+  entry.grp.position.set(x, 0, z);
+  entry.targetX = x;
+  entry.targetZ = z;
+}
+
+function highlightPlayer(name, on) {
+  const entry = playerReg.get(name);
+  if (!entry || !entry.body) return;
+  if (on) {
+    entry.body.material.color.set('#FFD700');
+    entry.body.material.emissive = new THREE.Color(0.25, 0.18, 0);
+  } else {
+    entry.body.material.color.set(entry.defaultColor);
+    entry.body.material.emissive = new THREE.Color(0, 0, 0);
+  }
+}
+
+// ── Pre-compute each player's first known position ─────────────────────────
+const playerFirst = new Map();
+EVENTS.forEach(ev => {
+  if (!playerFirst.has(ev.player)) playerFirst.set(ev.player, { ox: ev.sx, oy: ev.sy });
+});
+
+// Initialise Barcelona players
+playerFirst.forEach(({ ox, oy }, name) => {
+  ensurePlayer(name, '#004D98', ox, oy);
+});
+
+
+// ── Ball ──────────────────────────────────────────────────────────────────
+const ballGrp = new THREE.Group();
+ballGrp.add(new THREE.Mesh(
+  new THREE.SphereGeometry(BALL_R, 24, 18),
+  new THREE.MeshStandardMaterial({ color: 0xf4f4f4, roughness: 0.45 })
+));
+ballGrp.add(new THREE.Mesh(
+  new THREE.SphereGeometry(BALL_R * 1.08, 24, 18),
+  new THREE.MeshBasicMaterial({ color: 0x111111, wireframe: true, transparent: true, opacity: 0.88, depthWrite: false })
+));
+scene.add(ballGrp);
+
+const ballShadow = new THREE.Mesh(
+  new THREE.CircleGeometry(0.18, 16),
+  new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.3 })
+);
+ballShadow.rotation.x = -Math.PI / 2;
+scene.add(ballShadow);
+
+function setBallPos(ox, oy, yWorld = BALL_R) {
+  const { x, z } = o2t(ox, oy);
+  ballGrp.position.set(x, yWorld, z);
+  ballShadow.position.set(x, 0.01, z);
+}
+setBallPos(EVENTS[0].sx, EVENTS[0].sy);
+
+// ── Arc line management ───────────────────────────────────────────────────
+let arcLine = null;
+
+function showArc(ev) {
+  dropArc();
+  const geo = new THREE.BufferGeometry().setFromPoints(arcPoints(ev));
+  let mat;
+  if (ev.type === 'carry') {
+    mat = new THREE.LineDashedMaterial({ color: 0xE8B84B, transparent: true, opacity: 0.55, dashSize: 1.2, gapSize: 0.6 });
+  } else if (ev.type === 'goal') {
+    mat = new THREE.LineBasicMaterial({ color: 0xFFD700, transparent: true, opacity: 0.65 });
+  } else if (ev.passType === 'chipped' || ev.passType === 'chipped_through') {
+    // Lofted passes: cyan arc
+    mat = new THREE.LineBasicMaterial({ color: 0x7DF9FF, transparent: true, opacity: 0.70 });
+  } else {
+    // Ground pass: white, near-flat
+    mat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.35 });
+  }
+  arcLine = new THREE.Line(geo, mat);
+  if (ev.type === 'carry') arcLine.computeLineDistances();
+  scene.add(arcLine);
+}
+
+function dropArc() {
+  if (!arcLine) return;
+  scene.remove(arcLine);
+  arcLine.geometry.dispose();
+  arcLine.material.dispose();
+  arcLine = null;
+}
+
+// ── Animation state ───────────────────────────────────────────────────────
+const GOAL_DUR = 3.0;
+const MIN_DUR  = 0.3; // floor so zero-gap events still animate
+
+const sim = {
+  idx: 0,
+  progress: 0,
+  playing: false,
+  speed: 1.0,
+  done: false,
+  activePlayer: null,
+};
+
+function eDur(i) {
+  if (EVENTS[i].type === 'goal') return GOAL_DUR;
+  const next = EVENTS[i + 1];
+  if (!next) return 1.5;
+  const tCurr = EVENTS[i].min * 60 + EVENTS[i].sec;
+  const tNext = next.min * 60 + next.sec;
+  return Math.max(MIN_DUR, tNext - tCurr); // real match seconds; speed multiplier applied in render loop
+}
+
+function startEvent(i) {
+  if (i >= EVENTS.length) { finishSim(); return; }
+  sim.idx = i;
+  sim.progress = 0;
+
+  const ev = EVENTS[i];
+
+  // Deactivate previous
+  if (sim.activePlayer) { highlightPlayer(sim.activePlayer, false); sim.activePlayer = null; }
+
+  // Move passer to event start pos and highlight
+  movePlayer(ev.player, ev.sx, ev.sy);
+  highlightPlayer(ev.player, true);
+  sim.activePlayer = ev.player;
+
+  // Position ball at passer's feet
+  setBallPos(ev.sx, ev.sy);
+
+  showArc(ev);
+  updateHUD(i);
+  updateLog(i);
+}
+
+function finishSim() {
+  sim.done = true;
+  sim.playing = false;
+  if (sim.activePlayer) { highlightPlayer(sim.activePlayer, false); sim.activePlayer = null; }
+  playBtn.textContent = '↺ Replay';
+  document.getElementById('goalOverlay').classList.add('show');
+}
+
+function resetSim() {
+  sim.idx = 0; sim.progress = 0; sim.playing = false; sim.done = false;
+  if (sim.activePlayer) { highlightPlayer(sim.activePlayer, false); sim.activePlayer = null; }
+  dropArc();
+  document.getElementById('goalOverlay').classList.remove('show');
+  playBtn.textContent = '▶ Play';
+
+  playerFirst.forEach(({ ox, oy }, name) => snapPlayer(name, ox, oy));
+  setBallPos(EVENTS[0].sx, EVENTS[0].sy);
+
+  document.getElementById('progFill').style.width = '0%';
+  document.getElementById('progLbl').textContent = `0 / ${EVENTS.length}`;
+  document.getElementById('hudStep').textContent = 'PRESS PLAY TO START';
+  document.getElementById('hudName').textContent = '2nd Goal Build-up';
+  document.getElementById('hudDesc').textContent = "17' — Ferran Torres | 13-pass sequence";
+
+  document.querySelectorAll('.ei').forEach(el => el.classList.remove('active', 'done'));
+}
+
+function updateHUD(i) {
+  const ev = EVENTS[i];
+  const mm = String(ev.min).padStart(2, '0');
+  const ss = String(ev.sec).padStart(2, '0');
+  const next = EVENTS[i + 1];
+  document.getElementById('hudStep').textContent = `EVENT ${i + 1} / ${EVENTS.length} — ${mm}:${ss}`;
+  document.getElementById('hudName').textContent = ev.player;
+  let desc = '';
+  if (ev.type === 'goal')                          desc = '⚽ Shot — Ferran Torres finishes!';
+  else if (ev.type === 'carry')                    desc = `Carry ≈ ${carryDistM(ev).toFixed(1)} m`;
+  else if (ev.passType === 'chipped_through')      desc = `Chipped through ball → ${next ? next.player : '?'}`;
+  else if (ev.passType === 'chipped')              desc = `Chipped pass → ${next ? next.player : '?'}`;
+  else                                             desc = `Ground pass → ${next ? next.player : '?'}`;
+  document.getElementById('hudDesc').textContent = desc;
+  document.getElementById('progFill').style.width = `${((i + 1) / EVENTS.length) * 100}%`;
+  document.getElementById('progLbl').textContent = `${i + 1} / ${EVENTS.length}`;
+}
+
+function updateLog(active) {
+  document.querySelectorAll('.ei').forEach((el, i) => {
+    el.classList.toggle('active', i === active);
+    el.classList.toggle('done', i < active);
+  });
+  const el = document.getElementById(`ei${active}`);
+  if (el) el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+
+// ── Build event log ───────────────────────────────────────────────────────
+const logEl = document.getElementById('evtLog');
+EVENTS.forEach((ev, i) => {
+  const mm = String(ev.min).padStart(2, '0'), ss = String(ev.sec).padStart(2, '0');
+  const next = EVENTS[i + 1];
+  let desc = '';
+  if (ev.type === 'goal')                          desc = '⚽ Goal';
+  else if (ev.type === 'carry')                    desc = `Carry ≈ ${carryDistM(ev).toFixed(1)} m`;
+  else if (ev.passType === 'chipped_through')      desc = `Chipped through ball → ${next ? next.player : '?'}`;
+  else if (ev.passType === 'chipped')              desc = `Chipped → ${next ? next.player : '?'}`;
+  else                                             desc = `Ground pass → ${next ? next.player : '?'}`;
+  const div = document.createElement('div');
+  div.className = `ei${ev.type === 'goal' ? ' goal' : ev.type === 'carry' ? ' carry' : ev.passType === 'chipped' || ev.passType === 'chipped_through' ? ' chipped' : ''}`;
+  div.id = `ei${i}`;
+  div.innerHTML = `<div class="ei-time">${mm}:${ss}</div><div><div class="ei-name">${ev.player}</div><div class="ei-desc">${desc}</div></div>`;
+  div.addEventListener('click', () => {
+    if (sim.done) resetSim();
+    sim.playing = false;
+    playBtn.textContent = '▶ Play';
+    startEvent(i);
+  });
+  logEl.appendChild(div);
+});
+
+// ── Controls ──────────────────────────────────────────────────────────────
+const playBtn = document.getElementById('playBtn');
+
+playBtn.addEventListener('click', () => {
+  if (sim.done) { resetSim(); return; }
+  if (sim.playing) {
+    sim.playing = false;
+    playBtn.textContent = '▶ Resume';
+  } else {
+    sim.playing = true;
+    playBtn.textContent = '⏸ Pause';
+    if (sim.progress === 0 && sim.idx === 0 && !sim.activePlayer) startEvent(0);
+  }
+});
+
+document.getElementById('resetBtn').addEventListener('click', resetSim);
+document.getElementById('spd').addEventListener('change', e => { sim.speed = parseFloat(e.target.value); });
+
+// ── Resize ────────────────────────────────────────────────────────────────
+new ResizeObserver(() => {
+  const w = vc.clientWidth || 900, h = vc.clientHeight || 600;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+}).observe(vc);
+
+// ── Render loop ───────────────────────────────────────────────────────────
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+  orb.update();
+
+  const dt = clock.getDelta();
+
+  if (sim.playing && !sim.done && sim.activePlayer !== null) {
+    const dur = eDur(sim.idx);
+    sim.progress += (dt * sim.speed) / dur;
+
+    if (sim.progress >= 1) {
+      sim.progress = 1;
+      const ev = EVENTS[sim.idx];
+
+      // Snap ball to end
+      setBallPos(ev.ex, ev.ey);
+      dropArc();
+
+      // Point the finishing player toward their next appearance now,
+      // so they jog there during intervening events instead of teleporting.
+      const seq = playerEventSeq.get(ev.player) || [];
+      const futureIdx = seq.find(j => j > sim.idx);
+      if (futureIdx !== undefined) {
+        movePlayer(ev.player, EVENTS[futureIdx].sx, EVENTS[futureIdx].sy);
+      }
+
+      if (ev.type === 'goal') {
+        finishSim();
+      } else {
+        const nextIdx = sim.idx + 1;
+        if (nextIdx < EVENTS.length) {
+          startEvent(nextIdx);
+        } else {
+          finishSim();
+        }
+      }
+    } else {
+      // Animate ball along arc / carry path
+      const ev = EVENTS[sim.idx];
+      const p = arcAt(ev, sim.progress);
+      ballGrp.position.set(p.x, p.y + BALL_R, p.z);
+      ballShadow.position.set(p.x, 0.01, p.z);
+      ballShadow.material.opacity = 0.3 * Math.max(0, 1 - p.y / 6);
+
+      if (arcLine) {
+        const base = ev.type === 'goal' ? 0.65
+          : ev.type === 'carry' ? 0.55
+          : (ev.passType === 'chipped' || ev.passType === 'chipped_through') ? 0.70
+          : 0.35;
+        arcLine.material.opacity = base * (1 - sim.progress * 0.55);
+      }
+
+      const entry = playerReg.get(ev.player);
+      if (entry) {
+        if (ev.type === 'carry') {
+          // Carry player moves with ball; keep target in sync so movement loop sees dist≈0
+          entry.grp.position.set(p.x, 0, p.z);
+          entry.targetX = p.x;
+          entry.targetZ = p.z;
+        } else {
+          entry.grp.position.y = 0.04 * Math.sin(Date.now() * 0.006);
+        }
+      }
+    }
+  }
+
+  // Smoothly move every player toward their target (skip active carry player — handled above)
+  const activeCarryPlayer = (sim.playing && !sim.done && EVENTS[sim.idx]?.type === 'carry')
+    ? sim.activePlayer : null;
+  for (const [name, entry] of playerReg) {
+    if (name === activeCarryPlayer) continue;
+    const dx = entry.targetX - entry.grp.position.x;
+    const dz = entry.targetZ - entry.grp.position.z;
+    const dist = Math.hypot(dx, dz);
+    if (dist > 0.02) {
+      const step = Math.min(dist, PLAYER_SPEED * dt);
+      entry.grp.position.x += (dx / dist) * step;
+      entry.grp.position.z += (dz / dist) * step;
+      entry.grp.position.y = 0;
+    }
+  }
+
+  renderer.render(scene, camera);
+}
+animate();
+
+})();
+</script>
+</body>
+</html>
