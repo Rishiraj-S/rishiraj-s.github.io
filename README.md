@@ -1,6 +1,6 @@
 # Rishiraj Sinharay — Portfolio Website
 
-Personal portfolio website for **Rishiraj Sinharay**, a Data Scientist and Sports Analytics professional based in Madrid, Spain.
+Personal portfolio website for **Rishiraj Sinharay**, a Data Scientist and Sports Analytics professional based in Barcelona, Spain.
 
 Live site: [rishiraj-s.github.io](https://rishiraj-s.github.io)
 
