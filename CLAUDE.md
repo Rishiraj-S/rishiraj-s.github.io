@@ -17,24 +17,25 @@ Project/tool pages use relative paths (`../../assets/`) — they must be served 
 
 Static site deployed via GitHub Pages. No framework, no build step, no package manager.
 
-**Template base:** BootstrapMade iPortfolio — vendor libraries are bundled under `assets/vendor/` (Bootstrap 5, AOS, Swiper, GLightbox, Typed.js, PureCounter, Isotope, Waypoints). Do not install or update these via npm; edit the bundled files in place if needed.
+**Design:** "matchday hub" theme modelled on a football game's main menu (EAFC-style tiles, Q/E tabs, gold focus frame, button-prompt bar). Hand-written CSS/JS, no CSS framework or vendor libraries. Font: Saira (Google Fonts, variable `wdth` axis for condensed display type).
 
 **Page structure:**
 
-- `index.html` — single-page portfolio with anchor-linked sections: `#hero`, `#about`, `#resume`, `#extracurriculars`, `#portfolio`, `#certifications`, `#contact`
-- `projects/<slug>/index.html` — project case-study pages (clean URLs `/projects/<slug>/`); use `body class="portfolio-details-page"`, reference shared assets via `../../assets/` and own screenshots via `images/`
+- `index.html` — menu hub with hash-routed panels: `#home` (tile grid), `#projects` (filterable), `#tools`, `#career` (bio, transfer history, academy, trophies/certs), `#contact` (formsubmit.co form). Without JS all panels render stacked.
+- `projects/<slug>/index.html` — project case-study pages (clean URLs `/projects/<slug>/`); "match report" layout (gallery strip, article, facts sidebar), reference shared assets via `../../assets/` and own screenshots via `images/`
 - `tools/<slug>/index.html` — standalone interactive apps with their own inline CSS/JS, not using the shared template: `voronoi-pitch-mapper`, `event-tagger`, `3d-tracking-viewer` (loads `data/` and `football-pitch.png` from its own folder), `3d-goal-simulation` (unlisted)
 - `thank-you.html` — contact form redirect target
-- `assets/` — site-wide files only (css, js, vendor, profile/hero/favicon images)
+- `assets/` — site-wide files only (css, js, profile photo, favicons)
 - Naming: lowercase kebab-case everywhere (GitHub Pages is case-sensitive)
 
-**Styling:**
+**Styling and behaviour:**
 
-- Global CSS variables (colors, fonts) defined at the top of [assets/css/main.css](assets/css/main.css) — change accent color (`--accent-color: #0e8fc9`) here to retheme
-- Dark sidebar uses `.dark-background` class; light content sections use `.light-background`
+- Design tokens (colours, font, radii) at the top of [assets/css/main.css](assets/css/main.css); gold `--gold` is reserved for focus, ratings and primary actions
+- [assets/js/main.js](assets/js/main.js): panel routing, Q/E tab switching, arrow-key focus between `.tile`s, project filters (`data-tags`), Esc follows the `[data-back]` link on sub-pages
+- Home hub layout is CSS `grid-template-areas` (`.a-feat`, `.a-card`, ...), with tablet/mobile variants in the media queries
 
 **Adding a new project page:**
 
 1. Copy an existing `projects/<slug>/` folder as a template
-2. Add a card to the `#portfolio` section in `index.html` linking to `projects/<slug>/` with matching filter tags
+2. Add a `.tile` to `#project-grid` in `index.html` linking to `projects/<slug>/`, with `data-tags` (`sports`, `genai`, `research`)
 3. Put screenshots in `projects/<slug>/images/`

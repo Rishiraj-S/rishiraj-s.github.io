@@ -1,180 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Rishiraj Sinharay</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
-
-  <!-- Favicons -->
-  <link href="../../assets/img/favicon.png" rel="icon">
-
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
-  <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="../../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="../../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-
-  <!-- Main CSS File -->
-  <link href="../../assets/css/main.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>News Summarization and Text-to-Speech Application | Rishiraj Sinharay</title>
+  <meta name="theme-color" content="#0d1631">
+  <link rel="icon" href="../../assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@50..125,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/main.css">
 </head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-<body class="portfolio-details-page">
-
-  <header id="header" class="header dark-background d-flex flex-column">
-    <i class="header-toggle d-xl-none bi bi-list"></i>
-
-    <div class="profile-img">
-      <img src="../../assets/img/my-profile-img.jpg" alt="" class="img-fluid rounded-circle">
-    </div>
-
-    <a href="../../index.html" class="logo d-flex align-items-center justify-content-center">
-      <!-- Uncomment the line below if you also wish to use an image logo -->
-      <!-- <img src="../assets/img/logo.png" alt=""> -->
-      <h1 class="sitename">Rishiraj Sinharay</h1>
+  <header class="topbar">
+    <a class="manager" href="../../index.html">
+      <img src="../../assets/img/my-profile-img.jpg" alt="">
+      <span><strong>Rishiraj Sinharay</strong><span>Data Scientist, Barcelona</span></span>
     </a>
-
-    <div class="social-links text-center">
-      <a href="https://www.linkedin.com/in/rishirajsinharay/" class="linkedin"><i class="bi bi-linkedin"></i></a>
-      <a href="https://github.com/Rishiraj-S" class="github"><i class="bi bi-github"></i></a>
-      <a href="https://medium.com/@rishiraj1998.rs" class="medium"><i class="bi bi-medium"></i></a>
-    </div>
-
-    <nav id="navmenu" class="navmenu">
-      <ul>
-        <li><a href="../../index.html#hero" class="active"><i class="bi bi-house navicon"></i>Home</a></li>
-        <li><a href="../../index.html#about"><i class="bi bi-person navicon"></i> About</a></li>
-        <li><a href="../../index.html#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
-        <li><a href="../../index.html#portfolio"><i class="bi bi-images navicon"></i> Portfolio</a></li>
-        <li><a href="../../index.html#certifications"><i class="bi bi-award navicon"></i> Certifications</a></li>
-        <li><a href="../../index.html#extracurriculars"><i class="bi bi-people-fill navicon"></i> Extra-Curriculars</a></li>
-        <li><a href="../../index.html#contact"><i class="bi bi-envelope navicon"></i> Contact</a></li>
-      </ul>
+    <nav class="tabs" aria-label="Sections">
+      <a href="../../index.html#home">Home</a>
+      <a href="../../index.html#projects" aria-current="page">Projects</a>
+      <a href="../../index.html#tools">Tools</a>
+      <a href="../../index.html#career">Career</a>
+      <a href="../../index.html#contact">Contact</a>
     </nav>
-
+    <div class="socials">
+      <a href="https://www.linkedin.com/in/rishirajsinharay/" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zm1.78 13.02H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a>
+      <a href="https://github.com/Rishiraj-S" aria-label="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57l-.02-2.04c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.02 3.29c0 .32.22.69.83.57A12 12 0 0 0 12 .3"/></svg></a>
+      <a href="https://medium.com/@rishiraj1998.rs" aria-label="Medium"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.54 12a6.8 6.8 0 0 1-6.77 6.82A6.8 6.8 0 0 1 0 12a6.8 6.8 0 0 1 6.77-6.82A6.8 6.8 0 0 1 13.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg></a>
+    </div>
   </header>
 
-  <main class="main">
-
-    <!-- Page Title -->
-    <div class="page-title dark-background">
-      <div class="container d-lg-flex justify-content-between align-items-center">
-        <h1 class="mb-2 mb-lg-0">Project Details</h1>
-        <nav class="breadcrumbs">
-          <ol>
-            <li><a href="../../index.html">Home</a></li>
-            <li class="current">Project Details</li>
-          </ol>
-        </nav>
-      </div>
-    </div><!-- End Page Title -->
-
-    <!-- Portfolio Details Section -->
-    <section id="portfolio-details" class="portfolio-details section">
-
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-
-        <div class="row gy-4">
-
-          <div class="col-lg-8">
-            <div class="portfolio-details-slider swiper init-swiper">
-
-              <script type="application/json" class="swiper-config">
-                {
-                  "loop": true,
-                  "speed": 600,
-                  "autoplay": {
-                    "delay": 5000
-                  },
-                  "slidesPerView": "auto",
-                  "pagination": {
-                    "el": ".swiper-pagination",
-                    "type": "bullets",
-                    "clickable": true
-                  }
-                }
-              </script>
-
-              <div class="swiper-wrapper align-items-center">
-
-                <div class="swiper-slide">
-                  <img src="images/huggingface-landing-page.png" alt="">
-                </div>
-
-                <div class="swiper-slide">
-                  <img src="images/demo.png" alt="">
-                </div>
-
-              </div>
-              <div class="swiper-pagination"></div>
-            </div>
-          </div>
-
-          <div class="col-lg-4">
-            <div class="portfolio-info" data-aos="fade-up" data-aos-delay="200">
-              <h3>Project information</h3>
-              <ul>
-                <li><strong>Category</strong>: GenAI, Huggingface, Streamlit, Sentiment Analysis</li>
-                <li><strong>Organisation</strong>: Akaike Technologies</li>
-                <li><strong>Project date</strong>: March, 2025</li>
-                <li><strong>Project URL</strong>: <a href="https://github.com/Rishiraj-S/akaike_internship_assignment">github</a></li>
-                <li><strong>Application URL</strong>: <a href="https://huggingface.co/spaces/rsinharay/akaike_internship_assignment">huggingface</a></li>
-              </ul>
-            </div>
-            <div class="portfolio-description" data-aos="fade-up" data-aos-delay="300">
-              <h2>News Summarization and Text-to-Speech Application</h2>
-              <p>
-                This project is a web-based application that extracts key details from multiple news articles related to a given company, performs sentiment analysis, conducts a comparative analysis, and generates a text-to-speech (TTS) output in Hindi. The tool allows users to input a company name and receive a structured sentiment report along with an audio output.
-              </p>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-
-    </section><!-- /Portfolio Details Section -->
-
-  </main>
-
-  <footer id="footer" class="footer position-relative light-background">
-
-    <div class="container">
-            <div class="copyright text-center">
-        <p>© <strong class="px-1 sitename">Rishiraj Sinharay</strong> — All Rights Reserved</p>
-      </div>
+  <main id="main">
+    <a class="back" href="../../index.html#projects" data-back><span class="kbd">Esc</span> All projects</a>
+    <div class="report-head">
+      <span class="tag">GenAI, 2025</span>
+      <h1 class="display">News Summarization and Text-to-Speech Application</h1>
     </div>
 
+    <div class="gallery" aria-label="Screenshots">
+        <a href="images/huggingface-landing-page.png"><img src="images/huggingface-landing-page.png" alt="Huggingface landing page" loading="lazy"></a>
+        <a href="images/demo.png"><img src="images/demo.png" alt="Demo" loading="lazy"></a>
+    </div>
+
+    <div class="report">
+      <article>
+<p>
+                This project is a web-based application that extracts key details from multiple news articles related to a given company, performs sentiment analysis, conducts a comparative analysis, and generates a text-to-speech (TTS) output in Hindi. The tool allows users to input a company name and receive a structured sentiment report along with an audio output.
+              </p>
+      </article>
+      <dl class="facts">
+          <div><dt>Stack</dt><dd>GenAI, Huggingface, Streamlit, Sentiment Analysis</dd></div>
+          <div><dt>Organisation</dt><dd>Akaike Technologies</dd></div>
+          <div><dt>Date</dt><dd>March, 2025</dd></div>
+          <div><dt>Code</dt><dd><a href="https://github.com/Rishiraj-S/akaike_internship_assignment">GitHub repository</a></dd></div>
+          <div><dt>Application URL</dt><dd><a href="https://huggingface.co/spaces/rsinharay/akaike_internship_assignment">Hugging Face Space</a></dd></div>
+      </dl>
+    </div>
+  </main>
+
+  <footer class="prompts" aria-hidden="true">
+    <span class="copy">© Rishiraj Sinharay</span>
+    <span class="hint"><span class="kbd">Esc</span> Back</span>
   </footer>
 
-  <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <!-- Preloader -->
-  <div id="preloader"></div>
-
-  <!-- Vendor JS Files -->
-  <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="../../assets/vendor/aos/aos.js"></script>
-  <script src="../../assets/vendor/typed.js/typed.umd.js"></script>
-  <script src="../../assets/vendor/purecounter/purecounter_vanilla.js"></script>
-  <script src="../../assets/vendor/waypoints/noframework.waypoints.js"></script>
-  <script src="../../assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="../../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
-  <script src="../../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-  <script src="../../assets/vendor/swiper/swiper-bundle.min.js"></script>
-
-  <!-- Main JS File -->
   <script src="../../assets/js/main.js"></script>
-
 </body>
-
 </html>

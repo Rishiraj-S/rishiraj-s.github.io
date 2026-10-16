@@ -1,229 +1,72 @@
-/**
-* Template Name: iPortfolio
-* Template URL: https://bootstrapmade.com/iportfolio-bootstrap-portfolio-websites-template/
-* Updated: Jun 29 2024 with Bootstrap v5.3.3
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
+// Menu behaviour: hash tabs, Q/E to switch tabs, arrow keys move focus between tiles, Esc goes back.
+// Without JS every panel simply renders stacked, so nothing depends on this file.
+document.documentElement.classList.add("js");
 
-(function() {
-  "use strict";
+const tabs = [...document.querySelectorAll(".tabs a")];
+const panels = [...document.querySelectorAll(".panel")];
+const backLink = document.querySelector("[data-back]");
 
-  /**
-   * Header toggle
-   */
-  const headerToggleBtn = document.querySelector('.header-toggle');
+function show(id) {
+  const panel = panels.find(p => p.id === id) || panels[0];
+  if (!panel) return;
+  panels.forEach(p => p.classList.toggle("is-active", p === panel));
+  tabs.forEach(t => t.hash === "#" + panel.id ? t.setAttribute("aria-current", "page") : t.removeAttribute("aria-current"));
+  panel.querySelectorAll(".tile").forEach((t, i) => t.style.setProperty("--i", i));
+  window.scrollTo(0, 0);
+}
 
-  function headerToggle() {
-    document.querySelector('#header').classList.toggle('header-show');
-    headerToggleBtn.classList.toggle('bi-list');
-    headerToggleBtn.classList.toggle('bi-x');
+function stepTab(dir) {
+  const i = tabs.findIndex(t => t.getAttribute("aria-current") === "page");
+  location.hash = tabs[(i + dir + tabs.length) % tabs.length].hash;
+}
+
+// ponytail: nearest-tile-in-direction by centre distance; fine for a dozen tiles.
+function moveFocus(key) {
+  const panel = document.querySelector(".panel.is-active");
+  if (!panel) return false;
+  const tiles = [...panel.querySelectorAll(".tile:not([hidden])")];
+  const from = tiles.includes(document.activeElement) ? document.activeElement : null;
+  if (!from) { tiles[0]?.focus(); return !!tiles[0]; }
+  const a = from.getBoundingClientRect();
+  const [dx, dy] = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[key];
+  let best = null, bestScore = Infinity;
+  for (const t of tiles) {
+    if (t === from) continue;
+    const b = t.getBoundingClientRect();
+    const ox = (b.left + b.width / 2) - (a.left + a.width / 2);
+    const oy = (b.top + b.height / 2) - (a.top + a.height / 2);
+    const along = ox * dx + oy * dy;
+    if (along <= 1) continue;
+    const score = along + Math.abs(ox * dy + oy * dx) * 2;
+    if (score < bestScore) { best = t; bestScore = score; }
   }
-  headerToggleBtn.addEventListener('click', headerToggle);
+  best?.focus();
+  return true;
+}
 
-  /**
-   * Hide mobile nav on same-page/hash links
-   */
-  document.querySelectorAll('#navmenu a').forEach(navmenu => {
-    navmenu.addEventListener('click', () => {
-      if (document.querySelector('.header-show')) {
-        headerToggle();
-      }
-    });
+document.addEventListener("keydown", e => {
+  if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest("input, textarea, select")) return;
+  if (e.key === "Escape" && backLink) { location.href = backLink.href; return; }
+  if (!panels.length) return;
+  if (e.key === "q" || e.key === "Q") stepTab(-1);
+  else if (e.key === "e" || e.key === "E") stepTab(1);
+  else if (e.key === "Escape") location.hash = tabs[0].hash;
+  else if (e.key.startsWith("Arrow") && moveFocus(e.key)) e.preventDefault();
+});
 
+if (panels.length) {
+  window.addEventListener("hashchange", () => show(location.hash.slice(1)));
+  show(location.hash.slice(1));
+}
+
+// Project filters
+document.querySelectorAll(".filters").forEach(group => {
+  const grid = document.getElementById(group.dataset.for);
+  group.addEventListener("click", e => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+    group.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b === btn));
+    const f = btn.dataset.filter;
+    grid.querySelectorAll(".tile").forEach(t => { t.hidden = f !== "all" && !t.dataset.tags.split(" ").includes(f); });
   });
-
-  /**
-   * Toggle mobile nav dropdowns
-   */
-  document.querySelectorAll('.navmenu .toggle-dropdown').forEach(navmenu => {
-    navmenu.addEventListener('click', function(e) {
-      e.preventDefault();
-      this.parentNode.classList.toggle('active');
-      this.parentNode.nextElementSibling.classList.toggle('dropdown-active');
-      e.stopImmediatePropagation();
-    });
-  });
-
-  /**
-   * Preloader
-   */
-  const preloader = document.querySelector('#preloader');
-  if (preloader) {
-    window.addEventListener('load', () => {
-      preloader.remove();
-    });
-  }
-
-  /**
-   * Scroll top button
-   */
-  let scrollTop = document.querySelector('.scroll-top');
-
-  function toggleScrollTop() {
-    if (scrollTop) {
-      window.scrollY > 100 ? scrollTop.classList.add('active') : scrollTop.classList.remove('active');
-    }
-  }
-  scrollTop.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  });
-
-  window.addEventListener('load', toggleScrollTop);
-  document.addEventListener('scroll', toggleScrollTop);
-
-  /**
-   * Animation on scroll function and init
-   */
-  function aosInit() {
-    AOS.init({
-      duration: 600,
-      easing: 'ease-in-out',
-      once: true,
-      mirror: false
-    });
-  }
-  window.addEventListener('load', aosInit);
-
-  /**
-   * Init typed.js
-   */
-  const selectTyped = document.querySelector('.typed');
-  if (selectTyped) {
-    let typed_strings = selectTyped.getAttribute('data-typed-items');
-    typed_strings = typed_strings.split(',');
-    new Typed('.typed', {
-      strings: typed_strings,
-      loop: true,
-      typeSpeed: 100,
-      backSpeed: 50,
-      backDelay: 2000
-    });
-  }
-
-  /**
-   * Initiate Pure Counter
-   */
-  new PureCounter();
-
-  /**
-   * Animate the skills items on reveal
-   */
-  let skillsAnimation = document.querySelectorAll('.skills-animation');
-  skillsAnimation.forEach((item) => {
-    new Waypoint({
-      element: item,
-      offset: '80%',
-      handler: function(direction) {
-        let progress = item.querySelectorAll('.progress .progress-bar');
-        progress.forEach(el => {
-          el.style.width = el.getAttribute('aria-valuenow') + '%';
-        });
-      }
-    });
-  });
-
-  /**
-   * Initiate glightbox
-   */
-  const glightbox = GLightbox({
-    selector: '.glightbox'
-  });
-
-  /**
-   * Init isotope layout and filters
-   */
-  document.querySelectorAll('.isotope-layout').forEach(function(isotopeItem) {
-    let layout = isotopeItem.getAttribute('data-layout') ?? 'masonry';
-    let filter = isotopeItem.getAttribute('data-default-filter') ?? '*';
-    let sort = isotopeItem.getAttribute('data-sort') ?? 'original-order';
-
-    let initIsotope;
-    imagesLoaded(isotopeItem.querySelector('.isotope-container'), function() {
-      initIsotope = new Isotope(isotopeItem.querySelector('.isotope-container'), {
-        itemSelector: '.isotope-item',
-        layoutMode: layout,
-        filter: filter,
-        sortBy: sort
-      });
-    });
-
-    isotopeItem.querySelectorAll('.isotope-filters li').forEach(function(filters) {
-      filters.addEventListener('click', function() {
-        isotopeItem.querySelector('.isotope-filters .filter-active').classList.remove('filter-active');
-        this.classList.add('filter-active');
-        initIsotope.arrange({
-          filter: this.getAttribute('data-filter')
-        });
-        if (typeof aosInit === 'function') {
-          aosInit();
-        }
-      }, false);
-    });
-
-  });
-
-  /**
-   * Init swiper sliders
-   */
-  function initSwiper() {
-    document.querySelectorAll(".init-swiper").forEach(function(swiperElement) {
-      let config = JSON.parse(
-        swiperElement.querySelector(".swiper-config").innerHTML.trim()
-      );
-
-      if (swiperElement.classList.contains("swiper-tab")) {
-        initSwiperWithCustomPagination(swiperElement, config);
-      } else {
-        new Swiper(swiperElement, config);
-      }
-    });
-  }
-
-  window.addEventListener("load", initSwiper);
-
-  /**
-   * Correct scrolling position upon page load for URLs containing hash links.
-   */
-  window.addEventListener('load', function(e) {
-    if (window.location.hash) {
-      if (document.querySelector(window.location.hash)) {
-        setTimeout(() => {
-          let section = document.querySelector(window.location.hash);
-          let scrollMarginTop = getComputedStyle(section).scrollMarginTop;
-          window.scrollTo({
-            top: section.offsetTop - parseInt(scrollMarginTop),
-            behavior: 'smooth'
-          });
-        }, 100);
-      }
-    }
-  });
-
-  /**
-   * Navmenu Scrollspy
-   */
-  let navmenulinks = document.querySelectorAll('.navmenu a');
-
-  function navmenuScrollspy() {
-    navmenulinks.forEach(navmenulink => {
-      if (!navmenulink.hash) return;
-      let section = document.querySelector(navmenulink.hash);
-      if (!section) return;
-      let position = window.scrollY + 200;
-      if (position >= section.offsetTop && position <= (section.offsetTop + section.offsetHeight)) {
-        document.querySelectorAll('.navmenu a.active').forEach(link => link.classList.remove('active'));
-        navmenulink.classList.add('active');
-      } else {
-        navmenulink.classList.remove('active');
-      }
-    })
-  }
-  window.addEventListener('load', navmenuScrollspy);
-  document.addEventListener('scroll', navmenuScrollspy);
-
-})();
+});

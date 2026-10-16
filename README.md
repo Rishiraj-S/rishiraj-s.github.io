@@ -37,7 +37,7 @@ This portfolio showcases professional experience, education, and projects across
 - **Data Engineering**: Selenium, BeautifulSoup, SerpAPI, SAP BODS, Apache Hadoop
 - **Visualisation**: Streamlit, Power BI, mplsoccer, matplotlib, Three.js, D3
 - **Cloud**: AWS (Textract, S3), Microsoft Azure
-- **Web**: HTML5, CSS3, Bootstrap 5, JavaScript
+- **Web**: HTML5, CSS3, JavaScript
 
 ---
 
@@ -58,9 +58,8 @@ rishiraj-s.github.io/
 │   └── voronoi-pitch-mapper/
 └── assets/                     # Site-wide only
     ├── css/main.css            # Custom styles (CSS variables for theming)
-    ├── js/main.js
-    ├── img/                    # Profile photo, hero background, favicons
-    └── vendor/                 # Bundled third-party libraries (no npm)
+    ├── js/main.js              # Tab routing, keyboard navigation, filters
+    └── img/                    # Profile photo, favicons
 ```
 
 Each project/tool folder also holds the `cover` image used for its card on the home page.
