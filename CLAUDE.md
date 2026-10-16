@@ -11,7 +11,7 @@ python3 -m http.server 8000
 # then open http://localhost:8000
 ```
 
-Project pages use relative paths (`../assets/`) — they must be served from a server root, not opened as `file://` paths, to avoid broken asset links.
+Project/tool pages use relative paths (`../../assets/`) — they must be served from a server root, not opened as `file://` paths, to avoid broken asset links.
 
 ## Architecture
 
@@ -22,11 +22,11 @@ Static site deployed via GitHub Pages. No framework, no build step, no package m
 **Page structure:**
 
 - `index.html` — single-page portfolio with anchor-linked sections: `#hero`, `#about`, `#resume`, `#extracurriculars`, `#portfolio`, `#certifications`, `#contact`
-- `projects/*.html` — individual project detail pages; use `body class="portfolio-details-page"` and reference assets via `../assets/`
+- `projects/<slug>/index.html` — project case-study pages (clean URLs `/projects/<slug>/`); use `body class="portfolio-details-page"`, reference shared assets via `../../assets/` and own screenshots via `images/`
+- `tools/<slug>/index.html` — standalone interactive apps with their own inline CSS/JS, not using the shared template: `voronoi-pitch-mapper`, `event-tagger`, `3d-tracking-viewer` (loads `data/` and `football-pitch.png` from its own folder), `3d-goal-simulation` (unlisted)
 - `thank-you.html` — contact form redirect target
-- `projects/voronoi_tool.html` — standalone interactive tool with its own inline CSS/JS, not using the shared template
-- `projects/event_tagger.html` — standalone football event tagging tool with its own inline CSS/JS
-- `projects/3d.html` — standalone 3D tracking visualizer; loads default data from `projects/data/` and default pitch image from `assets/img/football-pitch.png`
+- `assets/` — site-wide files only (css, js, vendor, profile/hero/favicon images)
+- Naming: lowercase kebab-case everywhere (GitHub Pages is case-sensitive)
 
 **Styling:**
 
@@ -35,6 +35,6 @@ Static site deployed via GitHub Pages. No framework, no build step, no package m
 
 **Adding a new project page:**
 
-1. Copy an existing `projects/*.html` as a template
-2. Add a card to the `#portfolio` section in `index.html` with matching filter tags
-3. Place screenshots under `assets/img/portfolio/<project-name>/`
+1. Copy an existing `projects/<slug>/` folder as a template
+2. Add a card to the `#portfolio` section in `index.html` linking to `projects/<slug>/` with matching filter tags
+3. Put screenshots in `projects/<slug>/images/`

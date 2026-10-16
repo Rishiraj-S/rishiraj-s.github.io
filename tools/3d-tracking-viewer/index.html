@@ -2256,7 +2256,7 @@
 
   async function loadDefaults() {
     const [pitchResult, matchResult] = await Promise.allSettled([
-      loadPitchImageFromUrl("../assets/img/football-pitch.png"),
+      loadPitchImageFromUrl("football-pitch.png"),
       fetch(DEFAULT_MATCH_URL).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
     ]);
 
