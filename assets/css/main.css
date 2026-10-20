@@ -119,6 +119,7 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
 .panel-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
 .panel-head h2 { font-size: clamp(2.4rem, 5vw, 4rem); margin: 0; }
 .panel-head p { margin: 0; color: var(--chalk); max-width: 52ch; }
+.panel-head.stacked { flex-direction: column; align-items: start; gap: 8px; }
 
 /* ---------- hub grid ---------- */
 
