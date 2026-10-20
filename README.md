@@ -56,10 +56,16 @@ rishiraj-s.github.io/
 │   ├── 3d-goal-simulation/     # Unlisted; + data/ (source parquet)
 │   ├── event-tagger/
 │   └── voronoi-pitch-mapper/
+├── _sources/                   # Full-res originals for re-exporting; not published (Jekyll skips _ folders)
+│   ├── photos/
+│   └── logos/
 └── assets/                     # Site-wide only
     ├── css/main.css            # Custom styles (CSS variables for theming)
     ├── js/main.js              # Tab routing, keyboard navigation, filters
-    └── img/                    # Profile photo, favicons
+    └── img/
+        ├── favicon.ico, favicon.png
+        ├── profile/            # Photos of me used on the site (avatar, card headshot, home background)
+        └── clubs/              # Employer badges, 128px square WebP
 ```
 
 Each project/tool folder also holds the `cover` image used for its card on the home page.
