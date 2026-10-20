@@ -315,17 +315,23 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
 .history { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--tunnel-3); }
 .history > li { border-bottom: 1px solid var(--tunnel-3); }
 .history summary {
-  display: grid; grid-template-columns: 9.5rem 1fr auto; gap: 16px; align-items: baseline;
+  display: grid; grid-template-columns: 9.5rem 48px 1fr auto; gap: 16px; align-items: center;
   padding: 14px 4px; cursor: pointer; list-style: none;
 }
 .history summary::-webkit-details-marker { display: none; }
 .history summary::after { content: "+"; font-weight: 700; color: var(--chalk); }
 .history details[open] summary::after { content: "−"; }
 .history summary:hover { background: var(--tunnel-2); }
+/* club badge: every logo sits on the same white crest chip */
+.badge { width: 48px; height: 48px; border-radius: 10px; background: #fff; object-fit: contain; box-shadow: 0 0 0 1px var(--tunnel-3); }
+span.badge { background: var(--tunnel-2); }
+.tile.career .badge { width: 28px; height: 28px; border-radius: 6px; box-shadow: none; }
+.tile.career .club-line { display: flex; align-items: center; gap: 10px; }
+.tile.career li { align-items: center; }
 .history time { color: var(--chalk); font-variant-numeric: tabular-nums; font-size: .92rem; }
 .history .club { font-weight: 700; font-size: 1.1rem; }
 .history .club small { display: block; font-weight: 400; color: var(--chalk); font-size: .9rem; }
-.history ul { margin: 0 0 16px calc(9.5rem + 20px); padding-left: 18px; color: var(--chalk); max-width: 70ch; }
+.history ul { margin: 0 0 16px calc(9.5rem + 48px + 52px); padding-left: 18px; color: var(--chalk); max-width: 70ch; }
 .history ul li + li { margin-top: 4px; }
 
 .academy, .trophies { list-style: none; margin: 0 0 36px; padding: 0; display: grid; gap: 8px; }
@@ -450,7 +456,8 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
   }
   .a-feat { min-height: 300px; }
   .walkout-name { font-size: 2.2rem; }
-  .history summary { grid-template-columns: 1fr auto; }
+  .history summary { grid-template-columns: 40px 1fr auto; gap: 4px 12px; }
+  .history .badge { width: 40px; height: 40px; }
   .history time { grid-column: 1 / -1; order: -1; }
   .history ul { margin-left: 0; }
   .form { grid-template-columns: 1fr; }
