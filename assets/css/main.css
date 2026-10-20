@@ -228,12 +228,13 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
     linear-gradient(to top, rgba(13, 22, 49, .7), transparent 35%);
 }
 .walkout::after {
-  background: linear-gradient(105deg, transparent 58%, rgba(247, 220, 139, .22) 64%, transparent 72%);
+  background: linear-gradient(75deg, transparent 28%, rgba(247, 220, 139, .22) 36%, transparent 44%);
   mix-blend-mode: screen;
 }
 
 .walkout-name {
-  align-self: end; justify-self: start;
+  align-self: end; justify-self: end;
+  text-align: right;
   margin: 0;
   font-size: clamp(2.4rem, 4.6vw, 4.4rem);
   text-shadow: 0 2px 18px rgba(0, 0, 0, .5);
@@ -241,7 +242,7 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
 
 /* FC card */
 .fc-card {
-  align-self: center; justify-self: end;
+  align-self: center; justify-self: start;
   width: clamp(170px, 17vw, 240px);
   aspect-ratio: 5 / 7;
   padding: 1.5em 1.1em 2.6em;   /* em, not %: % padding resolves against the tile width, not the card */
@@ -274,8 +275,8 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
   .js .walkout-name { animation: name-in .6s .4s cubic-bezier(.2, .7, .2, 1) both; }
   .js .fc-card { animation: card-flip .7s .8s cubic-bezier(.2, .8, .25, 1.15) both, card-shine 1s 1.5s ease-out both; }
   @keyframes settle { from { opacity: 0; transform: scale(1.08); filter: brightness(.3); } }
-  @keyframes name-in { from { opacity: 0; transform: translateX(-24px); } }
-  @keyframes card-flip { from { opacity: 0; transform: perspective(900px) rotateY(-95deg) scale(.9); } }
+  @keyframes name-in { from { opacity: 0; transform: translateX(24px); } }
+  @keyframes card-flip { from { opacity: 0; transform: perspective(900px) rotateY(95deg) scale(.9); } }
   @keyframes card-shine { to { background-position: 200% 0, 0 0; } }
 }
 
