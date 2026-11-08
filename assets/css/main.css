@@ -106,6 +106,7 @@ p a, dd a, li a { color: var(--gold); text-underline-offset: 3px; }
 .socials a { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; color: var(--chalk); }
 .socials a:hover { color: var(--floodlight); background: var(--tunnel-2); }
 .socials svg { width: 18px; height: 18px; fill: currentColor; }
+.contact-lines .socials { margin-left: -9px; }   /* line the first icon up with the label */
 
 /* ---------- panels ---------- */
 
@@ -387,10 +388,10 @@ span.badge { background: var(--tunnel-2); }
 .facts dt { font-size: .85rem; color: var(--chalk); }
 .facts dd { margin: 2px 0 0; font-weight: 600; }
 
-/* ---------- motion: one entrance, menu tiles cascade in ---------- */
+/* ---------- motion: each tab's items cascade in when it opens (tagged .cascade by main.js) ---------- */
 
 @media (prefers-reduced-motion: no-preference) {
-  .js .panel.is-active .tile { animation: tile-in .45s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--i, 0) * 45ms); }
+  .js .panel.is-active .cascade { animation: tile-in .45s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--i, 0) * 45ms); }
   @keyframes tile-in { from { opacity: 0; transform: translateY(14px) scale(.98); } }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -5,13 +5,15 @@ document.documentElement.classList.add("js");
 const tabs = [...document.querySelectorAll(".tabs a")];
 const panels = [...document.querySelectorAll(".panel")];
 const backLink = document.querySelector("[data-back]");
+// Items that stagger in when their tab opens (the menu-load effect)
+const CASCADE = ".tile, .about, .history > li, .academy > li, .certs > li, .contact-lines > div, .form > label, .form > .btn";
 
 function show(id) {
   const panel = panels.find(p => p.id === id) || panels[0];
   if (!panel) return;
   panels.forEach(p => p.classList.toggle("is-active", p === panel));
   tabs.forEach(t => t.hash === "#" + panel.id ? t.setAttribute("aria-current", "page") : t.removeAttribute("aria-current"));
-  panel.querySelectorAll(".tile").forEach((t, i) => t.style.setProperty("--i", i));
+  panel.querySelectorAll(CASCADE).forEach((el, i) => { el.classList.add("cascade"); el.style.setProperty("--i", i); });
   window.scrollTo(0, 0);
 }
 
