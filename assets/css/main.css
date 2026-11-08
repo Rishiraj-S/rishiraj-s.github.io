@@ -106,7 +106,9 @@ p a, dd a, li a { color: var(--gold); text-underline-offset: 3px; }
 .socials a { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; color: var(--chalk); }
 .socials a:hover { color: var(--floodlight); background: var(--tunnel-2); }
 .socials svg { width: 18px; height: 18px; fill: currentColor; }
-.contact-lines .socials { margin-left: -9px; }   /* line the first icon up with the label */
+.contact-lines .socials { margin-left: -10px; }   /* line the first icon up with the label */
+.contact-lines .socials a { width: 44px; height: 44px; }
+.contact-lines .socials svg { width: 24px; height: 24px; }
 
 /* ---------- panels ---------- */
 
