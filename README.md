@@ -16,17 +16,17 @@ This portfolio showcases professional experience, education, and projects across
 
 | Project | Domain | Stack |
 |---|---|---|
-| [GenAI Market Intelligence Dashboard](projects/genai_dashboard.html) | GenAI / LLM | Python, LLaMA-3.3-70B, FAISS, Streamlit |
-| [OCR-to-LLM Microservice](projects/news_summarizer.html) | GenAI / NLP | Rails 8, AWS Textract, Anthropic Claude |
-| [Player Scouting Dashboard](projects/player_scouting_dashboard.html) | Sports Analytics | Python, Streamlit, Radar Charts |
-| [Football Event Tagger](projects/event_tagger.html) | Sports Analytics | HTML, JavaScript, MediaRecorder API |
-| [3D Tracking Data Visualizer](projects/3d.html) | Sports Analytics | JavaScript, Three.js, D3-Delaunay |
-| [Voronoi Pitch Mapping Tool](projects/voronoi_tool.html) | Sports Analytics | JavaScript, OpenCV.js, D3-Delaunay |
-| [Bayer Leverkusen Bundesliga Analysis](projects/bayer_leverkusen.html) | Sports Analytics | Python, StatsBomb, mplsoccer |
-| [Leicester City PL Title Analysis](projects/leicester_city.html) | Sports Analytics | Python, pandas, matplotlib |
-| [Aitana Bonmatí World Cup Analysis](projects/aitana_bonmati.html) | Sports Analytics | Python, StatsBomb |
-| [MDS Minor Thesis — Breast Cancer ML](projects/monash-minor-thesis.html) | Machine Learning | Python, scikit-learn |
-| [Spotify Data Visualisation](projects/data-viz-project.html) | Data Viz | R, ggplot2 |
+| [GenAI Market Intelligence Dashboard](projects/genai-dashboard/) | GenAI / LLM | Python, LLaMA-3.3-70B, FAISS, Streamlit |
+| [OCR-to-LLM Microservice](projects/news-summarizer/) | GenAI / NLP | Rails 8, AWS Textract, Anthropic Claude |
+| [Player Scouting Dashboard](projects/player-scouting-dashboard/) | Sports Analytics | Python, Streamlit, Radar Charts |
+| [Football Event Tagger](tools/event-tagger/) | Sports Analytics | HTML, JavaScript, MediaRecorder API |
+| [3D Tracking Data Visualizer](tools/3d-tracking-viewer/) | Sports Analytics | JavaScript, Three.js, D3-Delaunay |
+| [Voronoi Pitch Mapping Tool](tools/voronoi-pitch-mapper/) | Sports Analytics | JavaScript, OpenCV.js, D3-Delaunay |
+| [Bayer Leverkusen Bundesliga Analysis](projects/bayer-leverkusen/) | Sports Analytics | Python, StatsBomb, mplsoccer |
+| [Leicester City PL Title Analysis](projects/leicester-city/) | Sports Analytics | Python, pandas, matplotlib |
+| [Aitana Bonmatí World Cup Analysis](projects/aitana-bonmati/) | Sports Analytics | Python, StatsBomb |
+| [MDS Minor Thesis — Breast Cancer ML](projects/monash-minor-thesis/) | Machine Learning | Python, scikit-learn |
+| [Spotify Data Visualisation](projects/spotify-data-viz/) | Data Viz | R, ggplot2 |
 
 ---
 
@@ -37,7 +37,7 @@ This portfolio showcases professional experience, education, and projects across
 - **Data Engineering**: Selenium, BeautifulSoup, SerpAPI, SAP BODS, Apache Hadoop
 - **Visualisation**: Streamlit, Power BI, mplsoccer, matplotlib, Three.js, D3
 - **Cloud**: AWS (Textract, S3), Microsoft Azure
-- **Web**: HTML5, CSS3, Bootstrap 5, JavaScript
+- **Web**: HTML5, CSS3, JavaScript
 
 ---
 
@@ -45,44 +45,31 @@ This portfolio showcases professional experience, education, and projects across
 
 ```
 rishiraj-s.github.io/
-├── index.html                  # Main single-page portfolio
-├── thank-you.html              # Contact form redirect
-├── projects/                   # Individual project pages and tools
-│   ├── aitana_bonmati.html
-│   ├── bayer_leverkusen.html
-│   ├── data-viz-project.html
-│   ├── event_tagger.html
-│   ├── genai_dashboard.html
-│   ├── leicester_city.html
-│   ├── monash-minor-thesis.html
-│   ├── news_summarizer.html
-│   ├── player_scouting_dashboard.html
-│   ├── voronoi_tool.html
-│   ├── 3d.html
-│   └── data/                   # Tracking data used by 3d.html
-└── assets/
+├── index.html                  # Single-page portfolio (home)
+├── thank-you.html              # Contact form redirect target
+├── projects/                   # Case-study pages, one folder per project
+│   └── <slug>/
+│       ├── index.html          # Served at /projects/<slug>/
+│       └── images/             # Screenshots used by this project only
+├── tools/                      # Standalone interactive apps (own inline CSS/JS)
+│   ├── 3d-tracking-viewer/     # + data/ (tracking JSON/JSONL) + football-pitch.png
+│   ├── 3d-goal-simulation/     # Unlisted; + data/ (source parquet)
+│   ├── event-tagger/
+│   └── voronoi-pitch-mapper/
+├── _sources/                   # Full-res originals for re-exporting; not published (Jekyll skips _ folders)
+│   ├── photos/
+│   └── logos/
+└── assets/                     # Site-wide only
     ├── css/main.css            # Custom styles (CSS variables for theming)
-    ├── js/main.js              # Custom scripts
-    ├── img/                    # Images and portfolio media
-    │   ├── portfolio/          # Project screenshots by category
-    │   │   ├── class_projects/
-    │   │   ├── dell/
-    │   │   ├── genai/
-    │   │   ├── monash_data_viz_project/
-    │   │   ├── monash_minor_thesis/
-    │   │   ├── scouting_dashboard/
-    │   │   └── sports/
-    │   └── football-pitch.png  # Default pitch image for 3D visualizer
-    └── vendor/                 # Bundled third-party libraries
-        ├── bootstrap/
-        ├── bootstrap-icons/
-        ├── aos/
-        ├── swiper/
-        ├── glightbox/
-        ├── isotope-layout/
-        ├── typed.js/
-        └── waypoints/
+    ├── js/main.js              # Tab routing, keyboard navigation, filters
+    └── img/
+        ├── favicon.ico, favicon.png
+        ├── profile/            # Photos of me used on the site (avatar, card headshot, home background)
+        └── clubs/              # Employer badges, 128px square WebP
 ```
+
+Each project/tool folder also holds the `cover` image used for its card on the home page.
+Naming: lowercase kebab-case for all folders and files.
 
 ---
 
@@ -95,7 +82,7 @@ python3 -m http.server 8000
 # then open http://localhost:8000
 ```
 
-> Project pages use relative paths (`../assets/`) and must be served from a server root, not opened as `file://` paths.
+> Pages use relative paths (`../../assets/`) and must be served from a server root, not opened as `file://` paths.
 
 ---
 
