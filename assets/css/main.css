@@ -201,7 +201,7 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
 }
 .about .bio { margin: 0; }
 
-/* ---------- walk-out: stadium photo + FC card ---------- */
+/* ---------- walk-out: stadium photo + name ---------- */
 
 .walkout {
   position: relative;
@@ -221,7 +221,7 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
   object-fit: cover;
   object-position: 46% 86%;   /* frames the player and the REAL MADRID stand */
 }
-/* game-menu grade: navy fade on the left for the name, on the right for the card, and one gold light streak */
+/* game-menu grade: navy fade on both edges and one gold light streak */
 .walkout::before, .walkout::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; }
 .walkout::before {
   background:
@@ -233,52 +233,24 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
   mix-blend-mode: screen;
 }
 
-.walkout-name {
+.walkout-title {
   align-self: end; justify-self: end;
   text-align: right;
+}
+.walkout-name {
   margin: 0;
   font-size: clamp(2.4rem, 4.6vw, 4.4rem);
   text-shadow: 0 2px 18px rgba(0, 0, 0, .5);
 }
+.walkout-role { margin: 10px 0 0; font-size: clamp(.95rem, 1.3vw, 1.2rem); color: var(--chalk); text-shadow: 0 1px 10px rgba(0, 0, 0, .6); }
+.walkout-role b { display: block; color: var(--floodlight); font-size: 1.2em; text-transform: uppercase; }
 
-/* FC card */
-.fc-card {
-  align-self: center; justify-self: start;
-  width: clamp(170px, 17vw, 240px);
-  aspect-ratio: 5 / 7;
-  padding: 1.5em 1.1em 2.6em;   /* em, not %: % padding resolves against the tile width, not the card */
-  display: flex; flex-direction: column; align-items: center;
-  text-align: center;
-  color: var(--gold-ink);
-  background:
-    linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, .4) 45%, transparent 60%) no-repeat -200% 0 / 250% 100%,
-    linear-gradient(155deg, #fbe7a6 0%, var(--gold) 42%, #b5832a 100%);
-  clip-path: polygon(14% 0, 86% 0, 100% 7%, 100% 88%, 50% 100%, 0 88%, 0 7%);
-}
-.fc-face {
-  flex: 1 1 0; min-height: 0;
-  width: 92%; object-fit: cover; object-position: 50% 20%;
-  -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 98%);
-  mask-image: linear-gradient(to bottom, #000 60%, transparent 98%);
-}
-.fc-role {
-  align-self: stretch;
-  margin: 6px 0 4px; padding-bottom: 6px;
-  border-bottom: 1px solid rgba(42, 30, 0, .3);
-  font-size: clamp(1rem, 1.5vw, 1.3rem); font-weight: 800; font-variation-settings: "wdth" 70;
-  text-transform: uppercase; line-height: 1;
-}
-.fc-club { margin: 0; font-size: clamp(.7rem, .9vw, .82rem); font-weight: 700; line-height: 1.2; }
-
-/* the walk-out: camera settles on the stadium, name slides in, card flips and catches the light */
+/* the walk-out: camera settles on the stadium, name slides in */
 @media (prefers-reduced-motion: no-preference) {
   .js .walkout-bg { animation: settle 1.4s cubic-bezier(.2, .7, .2, 1) both; }
-  .js .walkout-name { animation: name-in .6s .4s cubic-bezier(.2, .7, .2, 1) both; }
-  .js .fc-card { animation: card-flip .7s .8s cubic-bezier(.2, .8, .25, 1.15) both, card-shine 1s 1.5s ease-out both; }
+  .js .walkout-title { animation: name-in .6s .4s cubic-bezier(.2, .7, .2, 1) both; }
   @keyframes settle { from { opacity: 0; transform: scale(1.08); filter: brightness(.3); } }
   @keyframes name-in { from { opacity: 0; transform: translateX(24px); } }
-  @keyframes card-flip { from { opacity: 0; transform: perspective(900px) rotateY(95deg) scale(.9); } }
-  @keyframes card-shine { to { background-position: 200% 0, 0 0; } }
 }
 
 /* ---------- filter chips ---------- */
@@ -340,7 +312,7 @@ span.badge { background: var(--tunnel-2); }
 .academy b, .certs b { display: block; }
 .academy span, .certs span { color: var(--chalk); font-size: .9rem; }
 .certs li { border-left: 3px solid var(--gold); }
-.history + h3 { margin-top: 40px; }
+.trophy-cabinet { grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); }
 
 .bio { max-width: 68ch; color: var(--chalk); margin: 0 0 32px; }
 
@@ -438,7 +410,6 @@ span.badge { background: var(--tunnel-2); }
       "car  car  car  con";
   }
   .walkout { height: 520px; padding: 20px; }
-  .fc-card { align-self: end; width: 40%; max-width: 200px; }
   .career-layout, .contact-layout, .report { grid-template-columns: 1fr; }
   .facts { position: static; }
 }
