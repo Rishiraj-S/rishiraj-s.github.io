@@ -21,7 +21,7 @@ Static site deployed via GitHub Pages. No framework, no build step, no package m
 
 **Page structure:**
 
-- `index.html` — menu hub with hash-routed panels: `#home` (tile grid), `#projects` (filterable), `#tools`, `#career` (bio, transfer history, academy, trophies/certs), `#contact` (formsubmit.co form). Without JS all panels render stacked.
+- `index.html` — menu hub with hash-routed panels: `#home` (tile grid), `#projects` (filterable), `#tools`, `#career` (bio, transfer history + certifications, academy), `#contact` (formsubmit.co form). Without JS all panels render stacked.
 - `projects/<slug>/index.html` — project case-study pages (clean URLs `/projects/<slug>/`); "match report" layout (gallery strip, article, facts sidebar), reference shared assets via `../../assets/` and own screenshots via `images/`
 - `tools/<slug>/index.html` — standalone interactive apps with their own inline CSS/JS, not using the shared template: `voronoi-pitch-mapper`, `event-tagger`, `3d-tracking-viewer` (loads `data/` and `football-pitch.png` from its own folder), `3d-goal-simulation` (unlisted)
 - `thank-you.html` — contact form redirect target

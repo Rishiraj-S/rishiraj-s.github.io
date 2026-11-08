@@ -335,15 +335,14 @@ span.badge { background: var(--tunnel-2); }
 .history ul { margin: 0 0 16px calc(9.5rem + 48px + 52px); padding-left: 18px; color: var(--chalk); max-width: 70ch; }
 .history ul li + li { margin-top: 4px; }
 
-.academy, .trophies { list-style: none; margin: 0 0 36px; padding: 0; display: grid; gap: 8px; }
-.academy li, .trophies li { padding: 12px 14px; background: var(--tunnel-2); border-radius: var(--radius-tile); }
-.academy b, .trophies b { display: block; }
-.academy span, .trophies span { color: var(--chalk); font-size: .9rem; }
-.trophies li { border-left: 3px solid var(--gold); }
+.academy, .certs { list-style: none; margin: 0 0 36px; padding: 0; display: grid; gap: 8px; }
+.academy li, .certs li { padding: 12px 14px; background: var(--tunnel-2); border-radius: var(--radius-tile); }
+.academy b, .certs b { display: block; }
+.academy span, .certs span { color: var(--chalk); font-size: .9rem; }
+.certs li { border-left: 3px solid var(--gold); }
+.history + h3 { margin-top: 40px; }
 
 .bio { max-width: 68ch; color: var(--chalk); margin: 0 0 32px; }
-.stack { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 0 0 40px; }
-.stack li { padding: 3px 10px; border: 1px solid var(--tunnel-3); border-radius: var(--radius-chip); font-size: .9rem; }
 
 /* ---------- contact ---------- */
 
