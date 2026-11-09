@@ -1,0 +1,24 @@
+# Runs the site checks on every push and pull request.
+# A failing run blocks nothing by itself; protect `main` in repo settings to require it before merging.
+name: Site checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Self-test the checker
+        run: python3 scripts/check-site.py --self-test
+      - name: Check the site
+        run: python3 scripts/check-site.py

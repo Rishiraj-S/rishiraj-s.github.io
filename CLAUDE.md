@@ -13,6 +13,17 @@ python3 -m http.server 8000
 
 Project/tool pages use relative paths (`../../assets/`) — they must be served from a server root, not opened as `file://` paths, to avoid broken asset links.
 
+## Checks
+
+Run before every commit; CI (`.github/workflows/checks.yml`) runs the same on every push and PR:
+
+```bash
+python3 scripts/check-site.py              # links, anchors, html basics, naming, EXIF, file sizes, JS syntax
+python3 scripts/check-site.py --self-test  # proves each check catches a planted fault
+```
+
+Standard library only. When adding a new kind of check, add a planted fault for it to `self_test()`.
+
 ## Architecture
 
 Static site deployed via GitHub Pages. No framework, no build step, no package manager.
