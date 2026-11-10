@@ -13,6 +13,17 @@ python3 -m http.server 8000
 
 Project/tool pages use relative paths (`../../assets/`) — they must be served from a server root, not opened as `file://` paths, to avoid broken asset links.
 
+## Checks
+
+Run before every commit; CI (`.github/workflows/checks.yml`) runs the same on every push and PR:
+
+```bash
+python3 scripts/check-site.py              # links, anchors, html basics, naming, EXIF, file sizes, JS syntax
+python3 scripts/check-site.py --self-test  # proves each check catches a planted fault
+```
+
+Standard library only. When adding a new kind of check, add a planted fault for it to `self_test()`.
+
 ## Architecture
 
 Static site deployed via GitHub Pages. No framework, no build step, no package manager.
@@ -25,13 +36,13 @@ Static site deployed via GitHub Pages. No framework, no build step, no package m
 - `projects/<slug>/index.html` — project case-study pages (clean URLs `/projects/<slug>/`); "match report" layout (gallery strip, article, facts sidebar), reference shared assets via `../../assets/` and own screenshots via `images/`
 - `tools/<slug>/index.html` — standalone interactive apps with their own inline CSS/JS, not using the shared template: `voronoi-pitch-mapper`, `event-tagger`, `3d-tracking-viewer` (loads `data/` and `football-pitch.png` from its own folder), `3d-goal-simulation` (unlisted)
 - `thank-you.html` — contact form redirect target
-- `assets/` — site-wide files only: css, js, `img/profile/` (photos of the owner), `img/clubs/` (employer badges), favicons
+- `assets/` — site-wide files only: css, js, `img/profile/` (photos of the owner), `img/clubs/` (employer badges), `img/gallery/` (Trophies photo wall), favicons
 - `_sources/` — full-res originals (`photos/`, `logos/`) that site images are exported from; GitHub Pages' Jekyll build skips `_` folders, so they are versioned but not published. Export web copies as WebP with metadata stripped, never link `_sources/` from a page
 - Naming: lowercase kebab-case everywhere (GitHub Pages is case-sensitive)
 
 **Styling and behaviour:**
 
-- Design tokens (colours, font, radii) at the top of [assets/css/main.css](assets/css/main.css); gold `--gold` is reserved for focus, ratings and primary actions
+- Design tokens (colours, font, radii) at the top of [assets/css/main.css](assets/css/main.css). Colours are FC Barcelona's 2025–26 home kit (`--blue-void`, `--loyal-blue`, `--game-royal`, `--deep-garnet`, `--noble-red`, `--cardinal-red`, `--mineral-yellow`); use them through the semantic tokens (`--tunnel*`, `--chalk`, `--gold`). `--gold` (mineral yellow) is reserved for focus, ratings and primary actions
 - [assets/js/main.js](assets/js/main.js): panel routing, Q/E tab switching, arrow-key focus between `.tile`s, project filters (`data-tags`), Esc follows the `[data-back]` link on sub-pages
 - Home hub layout is CSS `grid-template-areas` (`.a-feat`, `.a-card`, ...), with tablet/mobile variants in the media queries
 

@@ -6,7 +6,7 @@ const tabs = [...document.querySelectorAll(".tabs a")];
 const panels = [...document.querySelectorAll(".panel")];
 const backLink = document.querySelector("[data-back]");
 // Items that stagger in when their tab opens (the menu-load effect)
-const CASCADE = ".tile, .about, .history > li, .academy > li, .certs > li, .contact-lines > div, .form > label, .form > .btn";
+const CASCADE = ".tile, .about, .history > li, .academy > li, .certs > li, .photo-wall > li, .contact-lines > div, .form > label, .form > .btn";
 
 function show(id) {
   const panel = panels.find(p => p.id === id) || panels[0];
@@ -72,3 +72,78 @@ document.querySelectorAll(".filters").forEach(group => {
     grid.querySelectorAll(".tile").forEach(t => { t.hidden = f !== "all" && !t.dataset.tags.split(" ").includes(f); });
   });
 });
+
+// Project titles sit on one line: shrink a too-long title just enough to fit its width.
+// Phones (<= 680px) let titles wrap instead, since a 110-character line would be unreadably small there.
+const projectTitle = document.querySelector(".report-head h1");
+if (projectTitle) {
+  const fitTitle = () => {
+    projectTitle.style.fontSize = "";
+    if (matchMedia("(max-width: 680px)").matches) return;
+    const { scrollWidth, clientWidth } = projectTitle;
+    if (scrollWidth > clientWidth) projectTitle.style.fontSize = parseFloat(getComputedStyle(projectTitle).fontSize) * clientWidth / scrollWidth * 0.98 + "px";
+  };
+  fitTitle();
+  document.fonts.ready.then(fitTitle);   // condensed webfont changes the width once it loads
+  addEventListener("resize", fitTitle);
+}
+
+// Project galleries: one screenshot at a time, with previous/next buttons and a counter, auto-advancing
+// like a replay reel. Autoplay pauses while hovered or focused, for a while after the visitor swipes,
+// scrolls or uses the buttons, and while off-screen or in a background tab; off for reduced motion.
+const SLIDE_MS = 3000, HOLD_AFTER_INPUT_MS = 8000;
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+document.querySelectorAll(".gallery").forEach(g => {
+  const slides = [...g.children];
+  if (slides.length < 2) return;
+  const nav = document.createElement("div");
+  nav.className = "gallery-nav";
+  nav.innerHTML = '<button type="button" aria-label="Previous screenshot">‹</button><span></span><button type="button" aria-label="Next screenshot">›</button>';
+  g.after(nav);
+  const [prev, count, next] = nav.children;
+
+  const step = () => slides[1].offsetLeft - slides[0].offsetLeft;
+  const current = () => Math.round(g.scrollLeft / step());
+  const go = i => g.scrollTo({ left: ((i + slides.length) % slides.length) * step(), behavior: reduceMotion ? "auto" : "smooth" });
+  const label = () => count.textContent = `${current() + 1} / ${slides.length}`;
+  let hovered = false, focused = false, visible = true, lastInput = 0;
+  const input = () => lastInput = Date.now();
+  prev.addEventListener("click", () => { input(); go(current() - 1); });
+  next.addEventListener("click", () => { input(); go(current() + 1); });
+  g.addEventListener("scroll", label, { passive: true });
+  label();
+  if (reduceMotion) return;
+
+  g.addEventListener("pointerenter", () => hovered = true);
+  g.addEventListener("pointerleave", () => hovered = false);
+  g.addEventListener("focusin", () => focused = true);
+  g.addEventListener("focusout", () => focused = false);
+  ["pointerdown", "wheel", "touchstart", "keydown"].forEach(ev => g.addEventListener(ev, input, { passive: true }));
+  new IntersectionObserver(([e]) => visible = e.isIntersecting).observe(g);
+  setInterval(() => {
+    if (hovered || focused || !visible || document.hidden || Date.now() - lastInput < HOLD_AFTER_INPUT_MS) return;
+    go(current() + 1);
+  }, SLIDE_MS);
+});
+
+// Home highlight tile: cycles through the Sports tiles of the Projects grid (read from the page, so it
+// stays in sync as projects are added). Pauses on hover/focus, off-tab and in background tabs; off for reduced motion.
+const highlight = document.querySelector(".a-hl");
+const sportsTiles = [...document.querySelectorAll('#project-grid .tile[data-tags~="sports"]')];
+if (highlight && sportsTiles.length > 1 && !reduceMotion) {
+  const [img, title, text] = ["img", "h3", "p"].map(sel => highlight.querySelector(sel));
+  const slides = sportsTiles.map(t => ({ src: t.querySelector("img").src, title: t.querySelector("h3").textContent, text: t.querySelector("p").textContent }));
+  slides.forEach(s => { new Image().src = s.src; });   // preload, so no slide fades in half-loaded
+  let i = 0, paused = false;
+  ["pointerenter", "focusin"].forEach(ev => highlight.addEventListener(ev, () => paused = true));
+  ["pointerleave", "focusout"].forEach(ev => highlight.addEventListener(ev, () => paused = false));
+  setInterval(() => {
+    if (paused || document.hidden || !highlight.closest(".panel.is-active")) return;
+    const s = slides[i = (i + 1) % slides.length];
+    highlight.classList.add("hl-swap");
+    setTimeout(() => {
+      img.src = s.src; title.textContent = s.title; text.textContent = s.text;
+      highlight.classList.remove("hl-swap");
+    }, 300);
+  }, SLIDE_MS);
+}

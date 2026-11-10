@@ -56,6 +56,7 @@ rishiraj-s.github.io/
 │   ├── 3d-goal-simulation/     # Unlisted; + data/ (source parquet)
 │   ├── event-tagger/
 │   └── voronoi-pitch-mapper/
+├── scripts/check-site.py      # Site checks (also run in CI)
 ├── _sources/                   # Full-res originals for re-exporting; not published (Jekyll skips _ folders)
 │   ├── photos/
 │   └── logos/
@@ -83,6 +84,12 @@ python3 -m http.server 8000
 ```
 
 > Pages use relative paths (`../../assets/`) and must be served from a server root, not opened as `file://` paths.
+
+---
+
+## Checks
+
+`python3 scripts/check-site.py` checks everything GitHub Pages publishes: local links and assets resolve (case-sensitive), tab/anchor targets exist, pages have a title, language and viewport, every image has alt text, file names are kebab-case, published images carry no EXIF metadata, no file nears GitHub's size limits, and the site JavaScript parses. It runs on every push and pull request via GitHub Actions. `--self-test` proves each check still catches the fault it is for.
 
 ---
 

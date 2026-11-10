@@ -1,15 +1,22 @@
-/* Rishiraj Sinharay — "matchday hub" theme.
-   Home page reads like a football game's main menu: tabs, tiles, a gold focus frame. */
+/* Rishiraj Sinharay — "matchday hub" theme in FC Barcelona's 2025–26 home-kit colours.
+   Home page reads like a football game's main menu: tabs, tiles, a mineral-yellow focus frame. */
 
 :root {
-  --tunnel: #0d1631;      /* page background, stadium tunnel at night */
-  --tunnel-2: #16224a;    /* raised surfaces */
-  --tunnel-3: #22306a;    /* hover / borders */
-  --floodlight: #eef2ff;  /* primary text */
-  --chalk: #9aa6c8;       /* secondary text, pitch markings */
-  --pitch: #1b6b47;       /* sports tiles */
-  --pitch-2: #145236;
-  --gold: #e9b949;        /* focus frame, card, ratings: the only warm colour */
+  /* 2025–26 kit palette: blended blaugrana stripes, mineral-yellow crest */
+  --blue-void: #0a0e29;
+  --loyal-blue: #1b2f80;
+  --game-royal: #1d4fc4;
+  --deep-garnet: #4f0b26;
+  --noble-red: #7e1236;
+  --cardinal-red: #a50044;
+  --mineral-yellow: #edbb00;
+
+  --tunnel: var(--blue-void);   /* page background */
+  --tunnel-2: #121b4f;          /* raised surfaces: blue void lifted toward loyal blue */
+  --tunnel-3: #24378f;          /* hover / borders: loyal blue */
+  --floodlight: #eef2ff;        /* primary text */
+  --chalk: #a9b3d9;             /* secondary text */
+  --gold: var(--mineral-yellow); /* focus frame, ratings, primary actions: the only yellow */
   --gold-ink: #2a1e00;
 
   --font: "Saira", system-ui, sans-serif;
@@ -32,12 +39,7 @@ body {
   line-height: 1.55;
   color: var(--floodlight);
   background-color: var(--tunnel);
-  /* faint pitch-plan grid: the "research" layer under everything */
-  background-image:
-    linear-gradient(rgba(154, 166, 200, .05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(154, 166, 200, .05) 1px, transparent 1px),
-    radial-gradient(ellipse 80% 60% at 70% -10%, rgba(27, 107, 71, .35), transparent 70%);
-  background-size: 48px 48px, 48px 48px, 100% 100%;
+  background-image: radial-gradient(ellipse 70% 50% at 50% -10%, rgba(27, 47, 128, .35), transparent 70%);   /* faint loyal-blue glow */
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
 }
@@ -69,9 +71,10 @@ p a, dd a, li a { color: var(--gold); text-underline-offset: 3px; }
   position: sticky; top: 0; z-index: 5;
   display: flex; align-items: center; gap: 20px;
   padding: 12px var(--gutter);
-  background: rgba(13, 22, 49, .88);
+  background: rgba(10, 14, 41, .9);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--tunnel-3);
+  border-bottom: 2px solid;
+  border-image: linear-gradient(90deg, var(--loyal-blue) 50%, var(--noble-red) 50%) 1;   /* one blaugrana line */
 }
 
 .manager { display: flex; align-items: center; gap: 12px; text-decoration: none; flex-shrink: 0; }
@@ -130,11 +133,11 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
   display: grid;
   gap: var(--gap);
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  grid-template-rows: repeat(2, minmax(190px, 26vh)) minmax(170px, 22vh);
+  grid-template-rows: minmax(190px, auto) minmax(190px, 26vh) minmax(170px, 22vh);
   grid-template-areas:
     "feat feat feat feat card card"
-    "feat feat feat feat card card"
-    "car  car  car  car  con  con";
+    "feat feat feat feat hl   hl"
+    "car  car  car  car  hl   hl";
 }
 
 .tile {
@@ -156,9 +159,9 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
 }
 .tile::before {   /* legibility scrim over screenshots */
   content: ""; position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(to top, rgba(13, 22, 49, .96) 18%, rgba(13, 22, 49, .55) 55%, rgba(13, 22, 49, .1));
+  background: linear-gradient(to top, rgba(10, 14, 41, .96) 18%, rgba(10, 14, 41, .55) 55%, rgba(10, 14, 41, .1));
 }
-.tile.pitch { background: linear-gradient(160deg, var(--pitch), var(--pitch-2)); }
+.tile.pitch { background: var(--tunnel-2); border-top: 3px solid var(--cardinal-red); }   /* garnet accent, not a garnet fill */
 .tile.pitch::before { background: none; }
 
 .tile:hover, .tile:focus-visible {
@@ -179,10 +182,16 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
   background: var(--floodlight); color: var(--tunnel);
 }
 
+.hub > * { border: 1px solid var(--tunnel-3); }
 .a-feat { grid-area: feat; }
 .a-card { grid-area: card; }
+.a-hl   { grid-area: hl; }
+/* highlight tile swaps styles: "Highlight" as the big display line, the project title as the chip */
+.a-hl .tag { margin-bottom: 8px; padding: 0; border-radius: 0; background: none; color: var(--floodlight); font-size: clamp(1.4rem, 2vw, 1.9rem); font-weight: 800; }
+.a-hl h3 { align-self: flex-start; padding: 2px 8px; border-radius: var(--radius-chip); font-size: .78rem; font-weight: 700; background: var(--floodlight); color: var(--tunnel); }
+.a-hl > img, .a-hl h3, .a-hl p { transition: transform .4s ease, opacity .3s ease; }   /* crossfade between slides (main.js) */
+.a-hl.hl-swap > img, .a-hl.hl-swap h3, .a-hl.hl-swap p { opacity: 0; }
 .a-car  { grid-area: car; }
-.a-con  { grid-area: con; }
 
 /* career tile: mini transfer history */
 .tile.career { justify-content: space-between; }
@@ -190,19 +199,16 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
 .tile.career li { display: flex; justify-content: space-between; gap: 12px; font-size: .92rem; color: var(--chalk); }
 .tile.career li:first-child { color: var(--floodlight); font-weight: 700; }
 
-.tile.contact { background: var(--gold); color: var(--gold-ink); }
-.tile.contact::before { background: none; }
-.tile.contact p { color: var(--gold-ink); opacity: .8; }
-
 /* ---------- about ---------- */
 
 .about {
-  display: flex; align-items: center;
+  display: flex; flex-direction: column; gap: 14px;
   padding: 20px 22px;
   background: var(--tunnel-2);
   border-radius: var(--radius-tile);
 }
 .about .bio { margin: 0; }
+.about h3 { margin: 0; font-size: clamp(1.4rem, 2vw, 1.9rem); }   /* same as the Career tile heading */
 
 /* ---------- walk-out: stadium photo + name ---------- */
 
@@ -224,16 +230,12 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
   object-fit: cover;
   object-position: 46% 86%;   /* frames the player and the REAL MADRID stand */
 }
-/* game-menu grade: navy fade on both edges and one gold light streak */
-.walkout::before, .walkout::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+/* game-menu grade: blue-void fade on both edges */
+.walkout::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; }
 .walkout::before {
   background:
-    linear-gradient(to right, rgba(13, 22, 49, .82), rgba(13, 22, 49, 0) 38%, rgba(13, 22, 49, 0) 58%, rgba(13, 22, 49, .78)),
-    linear-gradient(to top, rgba(13, 22, 49, .7), transparent 35%);
-}
-.walkout::after {
-  background: linear-gradient(75deg, transparent 28%, rgba(247, 220, 139, .22) 36%, transparent 44%);
-  mix-blend-mode: screen;
+    linear-gradient(to right, rgba(10, 14, 41, .82), rgba(10, 14, 41, 0) 38%, rgba(10, 14, 41, 0) 58%, rgba(10, 14, 41, .78)),
+    linear-gradient(to top, rgba(10, 14, 41, .7), transparent 35%);
 }
 
 .walkout-title {
@@ -266,7 +268,7 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
   border: 1px solid var(--tunnel-3); border-radius: var(--radius-chip);
   cursor: pointer;
 }
-.filters button[aria-pressed="true"] { color: var(--gold-ink); background: var(--gold); border-color: var(--gold); }
+.filters button[aria-pressed="true"] { color: var(--gold); border-color: var(--gold); }
 
 .grid-tiles {
   display: grid; gap: var(--gap);
@@ -314,8 +316,16 @@ span.badge { background: var(--tunnel-2); }
 .academy li, .certs li { padding: 12px 14px; background: var(--tunnel-2); border-radius: var(--radius-tile); }
 .academy b, .certs b { display: block; }
 .academy span, .certs span { color: var(--chalk); font-size: .9rem; }
-.certs li { border-left: 3px solid var(--gold); }
+.certs li { border-left: 3px solid var(--cardinal-red); }
 .trophy-cabinet { grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); }
+
+.section-h { font-size: 1.8rem; margin: 40px 0 12px; }
+
+.photo-wall { list-style: none; margin: 0; padding: 0; columns: 3 260px; column-gap: var(--gap); }   /* masonry: photos keep their own shape */
+.photo-wall li { break-inside: avoid; margin-bottom: var(--gap); }
+.photo-wall figure { margin: 0; }
+.photo-wall img { display: block; width: 100%; height: auto; border-radius: var(--radius-tile); }
+.photo-wall figcaption { margin-top: 8px; color: var(--chalk); font-size: .9rem; }
 
 .bio { max-width: 68ch; color: var(--chalk); margin: 0 0 32px; }
 
@@ -364,18 +374,29 @@ span.badge { background: var(--tunnel-2); }
 .back { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; color: var(--chalk); }
 .back:hover { color: var(--floodlight); }
 
-.report-head { margin: 8px 0 28px; max-width: 34ch; }
-.report-head .tag { display: inline-block; margin-bottom: 14px; padding: 2px 8px; background: var(--gold); color: var(--gold-ink); font-weight: 700; font-size: .85rem; border-radius: var(--radius-chip); }
+.report-head { margin: 8px 0 28px; }
+.js .report-head h1 { white-space: nowrap; }   /* one line; main.js shrinks long titles to fit (phones wrap, see media query) */
+.report-head .tag { display: inline-block; margin-bottom: 14px; padding: 2px 8px; border: 1px solid var(--gold); color: var(--gold); font-weight: 700; font-size: .85rem; border-radius: var(--radius-chip); }
 .report-head h1 { margin: 0; font-size: clamp(2rem, 4vw, 3.2rem); }
 
 .gallery {
-  display: grid; grid-auto-flow: column; grid-auto-columns: min(86%, 900px); gap: var(--gap);
+  display: grid; grid-auto-flow: column; grid-auto-columns: 100%; gap: var(--gap);   /* one screenshot at a time */
   overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
   padding-bottom: 12px; margin-bottom: 36px;
   scrollbar-color: var(--tunnel-3) transparent;
 }
+.js .gallery { padding-bottom: 0; margin-bottom: 12px; scrollbar-width: none; }   /* JS adds buttons; without JS the scrollbar is the way through */
+.js .gallery::-webkit-scrollbar { display: none; }
 .gallery a { scroll-snap-align: start; border-radius: var(--radius-tile); overflow: hidden; background: var(--tunnel-2); }
 .gallery img { width: 100%; height: clamp(240px, 52vh, 560px); object-fit: contain; }
+.gallery-nav { display: flex; justify-content: center; align-items: center; gap: 16px; margin-bottom: 36px; }
+.gallery-nav button {
+  width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+  font: inherit; font-size: 1.5rem; line-height: 1; color: var(--floodlight);
+  background: var(--tunnel-2); border: 1px solid var(--tunnel-3);
+}
+.gallery-nav button:hover { border-color: var(--gold); color: var(--gold); }
+.gallery-nav span { min-width: 5ch; text-align: center; color: var(--chalk); font-variant-numeric: tabular-nums; }
 
 .report { display: grid; gap: 48px; grid-template-columns: minmax(0, 1fr) 320px; align-items: start; }
 .report article { max-width: 70ch; }
@@ -383,6 +404,11 @@ span.badge { background: var(--tunnel-2); }
 .report article p { margin: 0 0 1em; color: #cfd6ee; }
 .report article ul { color: #cfd6ee; padding-left: 20px; }
 .report article h3, .report article h4 { margin: 1.6em 0 .5em; }
+.report + .report { margin-top: 12px; }
+.report.split { grid-template-columns: repeat(2, minmax(0, 1fr)); }   /* description | poster */
+.poster { margin: 0; }
+.poster img { display: block; width: 100%; height: auto; border-radius: var(--radius-tile); }
+.poster figcaption { margin-top: 8px; color: var(--chalk); font-size: .9rem; }
 
 .facts { position: sticky; top: 90px; margin: 0; padding: 18px; background: var(--tunnel-2); border-radius: var(--radius-tile); border-top: 3px solid var(--gold); }
 .facts div { padding: 10px 0; border-bottom: 1px solid var(--tunnel-3); }
@@ -409,11 +435,11 @@ span.badge { background: var(--tunnel-2); }
     grid-auto-rows: minmax(200px, auto);
     grid-template-areas:
       "feat feat card card"
-      "feat feat card card"
-      "car  car  car  con";
+      "feat feat hl   hl"
+      "car  car  hl   hl";
   }
   .walkout { height: 520px; padding: 20px; }
-  .career-layout, .contact-layout, .report { grid-template-columns: 1fr; }
+  .career-layout, .contact-layout, .report, .report.split { grid-template-columns: 1fr; }
   .facts { position: static; }
 }
 
@@ -426,10 +452,11 @@ span.badge { background: var(--tunnel-2); }
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-auto-rows: minmax(160px, auto);
     grid-template-areas:
-      "feat feat" "card card" "car car" "con con";
+      "feat feat" "card card" "hl hl" "car car";
   }
   .a-feat { min-height: 300px; }
   .walkout-name { font-size: 2.2rem; }
+  .js .report-head h1 { white-space: normal; }
   .history summary { grid-template-columns: 40px 1fr auto; gap: 4px 12px; }
   .history .badge { width: 40px; height: 40px; }
   .history time { grid-column: 1 / -1; order: -1; }
