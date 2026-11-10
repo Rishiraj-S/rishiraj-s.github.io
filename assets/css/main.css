@@ -402,6 +402,11 @@ span.badge { background: var(--tunnel-2); }
 .report article p { margin: 0 0 1em; color: #cfd6ee; }
 .report article ul { color: #cfd6ee; padding-left: 20px; }
 .report article h3, .report article h4 { margin: 1.6em 0 .5em; }
+.report + .report { margin-top: 12px; }
+.report.split { grid-template-columns: repeat(2, minmax(0, 1fr)); }   /* description | poster */
+.poster { margin: 0; }
+.poster img { display: block; width: 100%; height: auto; border-radius: var(--radius-tile); }
+.poster figcaption { margin-top: 8px; color: var(--chalk); font-size: .9rem; }
 
 .facts { position: sticky; top: 90px; margin: 0; padding: 18px; background: var(--tunnel-2); border-radius: var(--radius-tile); border-top: 3px solid var(--gold); }
 .facts div { padding: 10px 0; border-bottom: 1px solid var(--tunnel-3); }
@@ -432,7 +437,7 @@ span.badge { background: var(--tunnel-2); }
       "car  car  hl   hl";
   }
   .walkout { height: 520px; padding: 20px; }
-  .career-layout, .contact-layout, .report { grid-template-columns: 1fr; }
+  .career-layout, .contact-layout, .report, .report.split { grid-template-columns: 1fr; }
   .facts { position: static; }
 }
 
