@@ -91,7 +91,7 @@ if (projectTitle) {
 // Project galleries: one screenshot at a time, with previous/next buttons and a counter, auto-advancing
 // like a replay reel. Autoplay pauses while hovered or focused, for a while after the visitor swipes,
 // scrolls or uses the buttons, and while off-screen or in a background tab; off for reduced motion.
-const SLIDE_MS = 4500, HOLD_AFTER_INPUT_MS = 8000;
+const SLIDE_MS = 3000, HOLD_AFTER_INPUT_MS = 8000;
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 document.querySelectorAll(".gallery").forEach(g => {
   const slides = [...g.children];
@@ -125,3 +125,25 @@ document.querySelectorAll(".gallery").forEach(g => {
     go(current() + 1);
   }, SLIDE_MS);
 });
+
+// Home highlight tile: cycles through the Sports tiles of the Projects grid (read from the page, so it
+// stays in sync as projects are added). Pauses on hover/focus, off-tab and in background tabs; off for reduced motion.
+const highlight = document.querySelector(".a-hl");
+const sportsTiles = [...document.querySelectorAll('#project-grid .tile[data-tags~="sports"]')];
+if (highlight && sportsTiles.length > 1 && !reduceMotion) {
+  const [img, title, text] = ["img", "h3", "p"].map(sel => highlight.querySelector(sel));
+  const slides = sportsTiles.map(t => ({ src: t.querySelector("img").src, title: t.querySelector("h3").textContent, text: t.querySelector("p").textContent }));
+  slides.forEach(s => { new Image().src = s.src; });   // preload, so no slide fades in half-loaded
+  let i = 0, paused = false;
+  ["pointerenter", "focusin"].forEach(ev => highlight.addEventListener(ev, () => paused = true));
+  ["pointerleave", "focusout"].forEach(ev => highlight.addEventListener(ev, () => paused = false));
+  setInterval(() => {
+    if (paused || document.hidden || !highlight.closest(".panel.is-active")) return;
+    const s = slides[i = (i + 1) % slides.length];
+    highlight.classList.add("hl-swap");
+    setTimeout(() => {
+      img.src = s.src; title.textContent = s.title; text.textContent = s.text;
+      highlight.classList.remove("hl-swap");
+    }, 300);
+  }, SLIDE_MS);
+}

@@ -185,6 +185,8 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
 /* highlight tile swaps styles: "Highlight" as the big display line, the project title as the chip */
 .a-hl .tag { margin-bottom: 8px; padding: 0; border-radius: 0; background: none; color: var(--floodlight); font-size: clamp(1.4rem, 2vw, 1.9rem); font-weight: 800; }
 .a-hl h3 { align-self: flex-start; padding: 2px 8px; border-radius: var(--radius-chip); font-size: .78rem; font-weight: 700; background: var(--floodlight); color: var(--tunnel); }
+.a-hl > img, .a-hl h3, .a-hl p { transition: transform .4s ease, opacity .3s ease; }   /* crossfade between slides (main.js) */
+.a-hl.hl-swap > img, .a-hl.hl-swap h3, .a-hl.hl-swap p { opacity: 0; }
 .a-car  { grid-area: car; }
 
 /* career tile: mini transfer history */
