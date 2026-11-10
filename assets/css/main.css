@@ -318,6 +318,14 @@ span.badge { background: var(--tunnel-2); }
 .certs li { border-left: 3px solid var(--gold); }
 .trophy-cabinet { grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); }
 
+.section-h { font-size: 1.8rem; margin: 40px 0 12px; }
+
+.photo-wall { list-style: none; margin: 0; padding: 0; columns: 3 260px; column-gap: var(--gap); }   /* masonry: photos keep their own shape */
+.photo-wall li { break-inside: avoid; margin-bottom: var(--gap); }
+.photo-wall figure { margin: 0; }
+.photo-wall img { display: block; width: 100%; height: auto; border-radius: var(--radius-tile); }
+.photo-wall figcaption { margin-top: 8px; color: var(--chalk); font-size: .9rem; }
+
 .bio { max-width: 68ch; color: var(--chalk); margin: 0 0 32px; }
 
 /* ---------- contact ---------- */

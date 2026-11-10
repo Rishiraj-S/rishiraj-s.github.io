@@ -6,7 +6,7 @@ const tabs = [...document.querySelectorAll(".tabs a")];
 const panels = [...document.querySelectorAll(".panel")];
 const backLink = document.querySelector("[data-back]");
 // Items that stagger in when their tab opens (the menu-load effect)
-const CASCADE = ".tile, .about, .history > li, .academy > li, .certs > li, .gallery > li, .contact-lines > div, .form > label, .form > .btn";
+const CASCADE = ".tile, .about, .history > li, .academy > li, .certs > li, .photo-wall > li, .contact-lines > div, .form > label, .form > .btn";
 
 function show(id) {
   const panel = panels.find(p => p.id === id) || panels[0];

@@ -36,7 +36,7 @@ Static site deployed via GitHub Pages. No framework, no build step, no package m
 - `projects/<slug>/index.html` — project case-study pages (clean URLs `/projects/<slug>/`); "match report" layout (gallery strip, article, facts sidebar), reference shared assets via `../../assets/` and own screenshots via `images/`
 - `tools/<slug>/index.html` — standalone interactive apps with their own inline CSS/JS, not using the shared template: `voronoi-pitch-mapper`, `event-tagger`, `3d-tracking-viewer` (loads `data/` and `football-pitch.png` from its own folder), `3d-goal-simulation` (unlisted)
 - `thank-you.html` — contact form redirect target
-- `assets/` — site-wide files only: css, js, `img/profile/` (photos of the owner), `img/clubs/` (employer badges), favicons
+- `assets/` — site-wide files only: css, js, `img/profile/` (photos of the owner), `img/clubs/` (employer badges), `img/gallery/` (Trophies photo wall), favicons
 - `_sources/` — full-res originals (`photos/`, `logos/`) that site images are exported from; GitHub Pages' Jekyll build skips `_` folders, so they are versioned but not published. Export web copies as WebP with metadata stripped, never link `_sources/` from a page
 - Naming: lowercase kebab-case everywhere (GitHub Pages is case-sensitive)
 
