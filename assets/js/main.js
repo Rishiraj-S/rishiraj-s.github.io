@@ -73,6 +73,21 @@ document.querySelectorAll(".filters").forEach(group => {
   });
 });
 
+// Project titles sit on one line: shrink a too-long title just enough to fit its width.
+// Phones (<= 680px) let titles wrap instead, since a 110-character line would be unreadably small there.
+const projectTitle = document.querySelector(".report-head h1");
+if (projectTitle) {
+  const fitTitle = () => {
+    projectTitle.style.fontSize = "";
+    if (matchMedia("(max-width: 680px)").matches) return;
+    const { scrollWidth, clientWidth } = projectTitle;
+    if (scrollWidth > clientWidth) projectTitle.style.fontSize = parseFloat(getComputedStyle(projectTitle).fontSize) * clientWidth / scrollWidth * 0.98 + "px";
+  };
+  fitTitle();
+  document.fonts.ready.then(fitTitle);   // condensed webfont changes the width once it loads
+  addEventListener("resize", fitTitle);
+}
+
 // Project galleries: one screenshot at a time, with previous/next buttons and a counter, auto-advancing
 // like a replay reel. Autoplay pauses while hovered or focused, for a while after the visitor swipes,
 // scrolls or uses the buttons, and while off-screen or in a background tab; off for reduced motion.

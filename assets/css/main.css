@@ -365,7 +365,8 @@ span.badge { background: var(--tunnel-2); }
 .back { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; color: var(--chalk); }
 .back:hover { color: var(--floodlight); }
 
-.report-head { margin: 8px 0 28px; max-width: 34ch; }
+.report-head { margin: 8px 0 28px; }
+.js .report-head h1 { white-space: nowrap; }   /* one line; main.js shrinks long titles to fit (phones wrap, see media query) */
 .report-head .tag { display: inline-block; margin-bottom: 14px; padding: 2px 8px; background: var(--gold); color: var(--gold-ink); font-weight: 700; font-size: .85rem; border-radius: var(--radius-chip); }
 .report-head h1 { margin: 0; font-size: clamp(2rem, 4vw, 3.2rem); }
 
@@ -375,18 +376,10 @@ span.badge { background: var(--tunnel-2); }
   padding-bottom: 12px; margin-bottom: 36px;
   scrollbar-color: var(--tunnel-3) transparent;
 }
-.gallery a { scroll-snap-align: start; border-radius: var(--radius-tile); overflow: hidden; background: var(--tunnel-2); }
-.gallery img { width: 100%; height: clamp(240px, 52vh, 560px); object-fit: contain; }
-
-.report { display: grid; gap: 48px; grid-template-columns: minmax(0, 1fr) 320px; align-items: start; }
-.report article { max-width: 70ch; }
-.report article h2 { font-size: 1.6rem; line-height: 1.2; margin: 0 0 14px; font-variation-settings: "wdth" 85; }
-.report article p { margin: 0 0 1em; color: #cfd6ee; }
-.report article ul { color: #cfd6ee; padding-left: 20px; }
 .js .gallery { padding-bottom: 0; margin-bottom: 12px; scrollbar-width: none; }   /* JS adds buttons; without JS the scrollbar is the way through */
 .js .gallery::-webkit-scrollbar { display: none; }
-.report article h3, .report article h4 { margin: 1.6em 0 .5em; }
-
+.gallery a { scroll-snap-align: start; border-radius: var(--radius-tile); overflow: hidden; background: var(--tunnel-2); }
+.gallery img { width: 100%; height: clamp(240px, 52vh, 560px); object-fit: contain; }
 .gallery-nav { display: flex; justify-content: center; align-items: center; gap: 16px; margin-bottom: 36px; }
 .gallery-nav button {
   width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
@@ -402,6 +395,14 @@ span.badge { background: var(--tunnel-2); }
 .facts dd { margin: 2px 0 0; font-weight: 600; }
 
 /* ---------- motion: each tab's items cascade in when it opens (tagged .cascade by main.js) ---------- */
+
+
+.report { display: grid; gap: 48px; grid-template-columns: minmax(0, 1fr) 320px; align-items: start; }
+.report article { max-width: 70ch; }
+.report article h2 { font-size: 1.6rem; line-height: 1.2; margin: 0 0 14px; font-variation-settings: "wdth" 85; }
+.report article p { margin: 0 0 1em; color: #cfd6ee; }
+.report article ul { color: #cfd6ee; padding-left: 20px; }
+.report article h3, .report article h4 { margin: 1.6em 0 .5em; }
 
 @media (prefers-reduced-motion: no-preference) {
   .js .panel.is-active .cascade { animation: tile-in .45s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--i, 0) * 45ms); }
@@ -449,4 +450,5 @@ span.badge { background: var(--tunnel-2); }
   .prompts .copy { display: none; }
 }
 
+  .js .report-head h1 { white-space: normal; }
 .sent { min-height: 100vh; display: grid; place-content: center; justify-items: start; }
