@@ -130,10 +130,10 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
   display: grid;
   gap: var(--gap);
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  grid-template-rows: repeat(2, minmax(190px, 26vh)) minmax(170px, 22vh);
+  grid-template-rows: minmax(190px, auto) minmax(190px, 26vh) minmax(170px, 22vh);
   grid-template-areas:
     "feat feat feat feat card card"
-    "feat feat feat feat card card"
+    "feat feat feat feat hl   hl"
     "car  car  car  car  con  con";
 }
 
@@ -181,6 +181,7 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
 
 .a-feat { grid-area: feat; }
 .a-card { grid-area: card; }
+.a-hl   { grid-area: hl; }
 .a-car  { grid-area: car; }
 .a-con  { grid-area: con; }
 
@@ -409,7 +410,7 @@ span.badge { background: var(--tunnel-2); }
     grid-auto-rows: minmax(200px, auto);
     grid-template-areas:
       "feat feat card card"
-      "feat feat card card"
+      "feat feat hl   hl"
       "car  car  car  con";
   }
   .walkout { height: 520px; padding: 20px; }
@@ -426,7 +427,7 @@ span.badge { background: var(--tunnel-2); }
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-auto-rows: minmax(160px, auto);
     grid-template-areas:
-      "feat feat" "card card" "car car" "con con";
+      "feat feat" "card card" "hl hl" "car car" "con con";
   }
   .a-feat { min-height: 300px; }
   .walkout-name { font-size: 2.2rem; }
