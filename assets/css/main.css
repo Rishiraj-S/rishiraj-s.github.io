@@ -388,14 +388,6 @@ span.badge { background: var(--tunnel-2); }
 }
 .gallery-nav button:hover { border-color: var(--gold); color: var(--gold); }
 .gallery-nav span { min-width: 5ch; text-align: center; color: var(--chalk); font-variant-numeric: tabular-nums; }
-.facts { position: sticky; top: 90px; margin: 0; padding: 18px; background: var(--tunnel-2); border-radius: var(--radius-tile); border-top: 3px solid var(--gold); }
-.facts div { padding: 10px 0; border-bottom: 1px solid var(--tunnel-3); }
-.facts div:last-child { border-bottom: 0; }
-.facts dt { font-size: .85rem; color: var(--chalk); }
-.facts dd { margin: 2px 0 0; font-weight: 600; }
-
-/* ---------- motion: each tab's items cascade in when it opens (tagged .cascade by main.js) ---------- */
-
 
 .report { display: grid; gap: 48px; grid-template-columns: minmax(0, 1fr) 320px; align-items: start; }
 .report article { max-width: 70ch; }
@@ -403,6 +395,14 @@ span.badge { background: var(--tunnel-2); }
 .report article p { margin: 0 0 1em; color: #cfd6ee; }
 .report article ul { color: #cfd6ee; padding-left: 20px; }
 .report article h3, .report article h4 { margin: 1.6em 0 .5em; }
+
+.facts { position: sticky; top: 90px; margin: 0; padding: 18px; background: var(--tunnel-2); border-radius: var(--radius-tile); border-top: 3px solid var(--gold); }
+.facts div { padding: 10px 0; border-bottom: 1px solid var(--tunnel-3); }
+.facts div:last-child { border-bottom: 0; }
+.facts dt { font-size: .85rem; color: var(--chalk); }
+.facts dd { margin: 2px 0 0; font-weight: 600; }
+
+/* ---------- motion: each tab's items cascade in when it opens (tagged .cascade by main.js) ---------- */
 
 @media (prefers-reduced-motion: no-preference) {
   .js .panel.is-active .cascade { animation: tile-in .45s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--i, 0) * 45ms); }
@@ -442,6 +442,7 @@ span.badge { background: var(--tunnel-2); }
   }
   .a-feat { min-height: 300px; }
   .walkout-name { font-size: 2.2rem; }
+  .js .report-head h1 { white-space: normal; }
   .history summary { grid-template-columns: 40px 1fr auto; gap: 4px 12px; }
   .history .badge { width: 40px; height: 40px; }
   .history time { grid-column: 1 / -1; order: -1; }
@@ -450,5 +451,4 @@ span.badge { background: var(--tunnel-2); }
   .prompts .copy { display: none; }
 }
 
-  .js .report-head h1 { white-space: normal; }
 .sent { min-height: 100vh; display: grid; place-content: center; justify-items: start; }
