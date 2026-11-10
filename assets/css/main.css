@@ -179,6 +179,7 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
   background: var(--floodlight); color: var(--tunnel);
 }
 
+.hub > * { border: 1px solid rgba(154, 166, 200, .35); }   /* chalk at 35%: a visible edge on every home tile */
 .a-feat { grid-area: feat; }
 .a-card { grid-area: card; }
 .a-hl   { grid-area: hl; }
