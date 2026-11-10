@@ -42,7 +42,7 @@ Static site deployed via GitHub Pages. No framework, no build step, no package m
 
 **Styling and behaviour:**
 
-- Design tokens (colours, font, radii) at the top of [assets/css/main.css](assets/css/main.css); gold `--gold` is reserved for focus, ratings and primary actions
+- Design tokens (colours, font, radii) at the top of [assets/css/main.css](assets/css/main.css). Colours are FC Barcelona's 2025–26 home kit (`--blue-void`, `--loyal-blue`, `--game-royal`, `--deep-garnet`, `--noble-red`, `--cardinal-red`, `--mineral-yellow`); use them through the semantic tokens (`--tunnel*`, `--chalk`, `--gold`). `--gold` (mineral yellow) is reserved for focus, ratings and primary actions
 - [assets/js/main.js](assets/js/main.js): panel routing, Q/E tab switching, arrow-key focus between `.tile`s, project filters (`data-tags`), Esc follows the `[data-back]` link on sub-pages
 - Home hub layout is CSS `grid-template-areas` (`.a-feat`, `.a-card`, ...), with tablet/mobile variants in the media queries
 

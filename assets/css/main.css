@@ -1,15 +1,22 @@
-/* Rishiraj Sinharay — "matchday hub" theme.
-   Home page reads like a football game's main menu: tabs, tiles, a gold focus frame. */
+/* Rishiraj Sinharay — "matchday hub" theme in FC Barcelona's 2025–26 home-kit colours.
+   Home page reads like a football game's main menu: tabs, tiles, a mineral-yellow focus frame. */
 
 :root {
-  --tunnel: #0d1631;      /* page background, stadium tunnel at night */
-  --tunnel-2: #16224a;    /* raised surfaces */
-  --tunnel-3: #22306a;    /* hover / borders */
-  --floodlight: #eef2ff;  /* primary text */
-  --chalk: #9aa6c8;       /* secondary text, pitch markings */
-  --pitch: #1b6b47;       /* sports tiles */
-  --pitch-2: #145236;
-  --gold: #e9b949;        /* focus frame, card, ratings: the only warm colour */
+  /* 2025–26 kit palette: blended blaugrana stripes, mineral-yellow crest */
+  --blue-void: #0a0e29;
+  --loyal-blue: #1b2f80;
+  --game-royal: #1d4fc4;
+  --deep-garnet: #4f0b26;
+  --noble-red: #7e1236;
+  --cardinal-red: #a50044;
+  --mineral-yellow: #edbb00;
+
+  --tunnel: var(--blue-void);   /* page background */
+  --tunnel-2: #121b4f;          /* raised surfaces: blue void lifted toward loyal blue */
+  --tunnel-3: #24378f;          /* hover / borders: loyal blue */
+  --floodlight: #eef2ff;        /* primary text */
+  --chalk: #a9b3d9;             /* secondary text */
+  --gold: var(--mineral-yellow); /* focus frame, ratings, primary actions: the only yellow */
   --gold-ink: #2a1e00;
 
   --font: "Saira", system-ui, sans-serif;
@@ -32,12 +39,7 @@ body {
   line-height: 1.55;
   color: var(--floodlight);
   background-color: var(--tunnel);
-  /* faint pitch-plan grid: the "research" layer under everything */
-  background-image:
-    linear-gradient(rgba(154, 166, 200, .05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(154, 166, 200, .05) 1px, transparent 1px),
-    radial-gradient(ellipse 80% 60% at 70% -10%, rgba(27, 107, 71, .35), transparent 70%);
-  background-size: 48px 48px, 48px 48px, 100% 100%;
+  background-image: radial-gradient(ellipse 70% 50% at 50% -10%, rgba(27, 47, 128, .35), transparent 70%);   /* faint loyal-blue glow */
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
 }
@@ -69,9 +71,10 @@ p a, dd a, li a { color: var(--gold); text-underline-offset: 3px; }
   position: sticky; top: 0; z-index: 5;
   display: flex; align-items: center; gap: 20px;
   padding: 12px var(--gutter);
-  background: rgba(13, 22, 49, .88);
+  background: rgba(10, 14, 41, .9);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--tunnel-3);
+  border-bottom: 2px solid;
+  border-image: linear-gradient(90deg, var(--loyal-blue) 50%, var(--noble-red) 50%) 1;   /* one blaugrana line */
 }
 
 .manager { display: flex; align-items: center; gap: 12px; text-decoration: none; flex-shrink: 0; }
@@ -156,9 +159,9 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
 }
 .tile::before {   /* legibility scrim over screenshots */
   content: ""; position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(to top, rgba(13, 22, 49, .96) 18%, rgba(13, 22, 49, .55) 55%, rgba(13, 22, 49, .1));
+  background: linear-gradient(to top, rgba(10, 14, 41, .96) 18%, rgba(10, 14, 41, .55) 55%, rgba(10, 14, 41, .1));
 }
-.tile.pitch { background: linear-gradient(160deg, var(--pitch), var(--pitch-2)); }
+.tile.pitch { background: var(--tunnel-2); border-top: 3px solid var(--cardinal-red); }   /* garnet accent, not a garnet fill */
 .tile.pitch::before { background: none; }
 
 .tile:hover, .tile:focus-visible {
@@ -179,7 +182,7 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
   background: var(--floodlight); color: var(--tunnel);
 }
 
-.hub > * { border: 1px solid rgba(154, 166, 200, .35); }   /* chalk at 35%: a visible edge on every home tile */
+.hub > * { border: 1px solid var(--tunnel-3); }
 .a-feat { grid-area: feat; }
 .a-card { grid-area: card; }
 .a-hl   { grid-area: hl; }
@@ -227,16 +230,12 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
   object-fit: cover;
   object-position: 46% 86%;   /* frames the player and the REAL MADRID stand */
 }
-/* game-menu grade: navy fade on both edges and one gold light streak */
-.walkout::before, .walkout::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+/* game-menu grade: blue-void fade on both edges */
+.walkout::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; }
 .walkout::before {
   background:
-    linear-gradient(to right, rgba(13, 22, 49, .82), rgba(13, 22, 49, 0) 38%, rgba(13, 22, 49, 0) 58%, rgba(13, 22, 49, .78)),
-    linear-gradient(to top, rgba(13, 22, 49, .7), transparent 35%);
-}
-.walkout::after {
-  background: linear-gradient(75deg, transparent 28%, rgba(247, 220, 139, .22) 36%, transparent 44%);
-  mix-blend-mode: screen;
+    linear-gradient(to right, rgba(10, 14, 41, .82), rgba(10, 14, 41, 0) 38%, rgba(10, 14, 41, 0) 58%, rgba(10, 14, 41, .78)),
+    linear-gradient(to top, rgba(10, 14, 41, .7), transparent 35%);
 }
 
 .walkout-title {
@@ -269,7 +268,7 @@ main { padding: clamp(20px, 3vw, 36px) var(--gutter) 96px; max-width: 1440px; ma
   border: 1px solid var(--tunnel-3); border-radius: var(--radius-chip);
   cursor: pointer;
 }
-.filters button[aria-pressed="true"] { color: var(--gold-ink); background: var(--gold); border-color: var(--gold); }
+.filters button[aria-pressed="true"] { color: var(--gold); border-color: var(--gold); }
 
 .grid-tiles {
   display: grid; gap: var(--gap);
@@ -317,7 +316,7 @@ span.badge { background: var(--tunnel-2); }
 .academy li, .certs li { padding: 12px 14px; background: var(--tunnel-2); border-radius: var(--radius-tile); }
 .academy b, .certs b { display: block; }
 .academy span, .certs span { color: var(--chalk); font-size: .9rem; }
-.certs li { border-left: 3px solid var(--gold); }
+.certs li { border-left: 3px solid var(--cardinal-red); }
 .trophy-cabinet { grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); }
 
 .section-h { font-size: 1.8rem; margin: 40px 0 12px; }
@@ -377,7 +376,7 @@ span.badge { background: var(--tunnel-2); }
 
 .report-head { margin: 8px 0 28px; }
 .js .report-head h1 { white-space: nowrap; }   /* one line; main.js shrinks long titles to fit (phones wrap, see media query) */
-.report-head .tag { display: inline-block; margin-bottom: 14px; padding: 2px 8px; background: var(--gold); color: var(--gold-ink); font-weight: 700; font-size: .85rem; border-radius: var(--radius-chip); }
+.report-head .tag { display: inline-block; margin-bottom: 14px; padding: 2px 8px; border: 1px solid var(--gold); color: var(--gold); font-weight: 700; font-size: .85rem; border-radius: var(--radius-chip); }
 .report-head h1 { margin: 0; font-size: clamp(2rem, 4vw, 3.2rem); }
 
 .gallery {
