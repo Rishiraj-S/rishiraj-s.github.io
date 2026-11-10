@@ -6,7 +6,7 @@ const tabs = [...document.querySelectorAll(".tabs a")];
 const panels = [...document.querySelectorAll(".panel")];
 const backLink = document.querySelector("[data-back]");
 // Items that stagger in when their tab opens (the menu-load effect)
-const CASCADE = ".tile, .about, .history > li, .academy > li, .certs > li, .contact-lines > div, .form > label, .form > .btn";
+const CASCADE = ".tile, .about, .history > li, .academy > li, .certs > li, .gallery > li, .contact-lines > div, .form > label, .form > .btn";
 
 function show(id) {
   const panel = panels.find(p => p.id === id) || panels[0];
@@ -72,3 +72,28 @@ document.querySelectorAll(".filters").forEach(group => {
     grid.querySelectorAll(".tile").forEach(t => { t.hidden = f !== "all" && !t.dataset.tags.split(" ").includes(f); });
   });
 });
+
+// Project galleries auto-advance like a replay reel. Paused while hovered or focused, for a while after
+// the visitor swipes or scrolls it, while off-screen or in a background tab; off for reduced motion.
+const SLIDE_MS = 4500, HOLD_AFTER_INPUT_MS = 8000;
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  document.querySelectorAll(".gallery").forEach(g => {
+    const slides = [...g.children];
+    if (slides.length < 2) return;
+    let hovered = false, focused = false, visible = true, lastInput = 0;
+    g.addEventListener("pointerenter", () => hovered = true);
+    g.addEventListener("pointerleave", () => hovered = false);
+    g.addEventListener("focusin", () => focused = true);
+    g.addEventListener("focusout", () => focused = false);
+    ["pointerdown", "wheel", "touchstart", "keydown"].forEach(ev => g.addEventListener(ev, () => lastInput = Date.now(), { passive: true }));
+    new IntersectionObserver(([e]) => visible = e.isIntersecting).observe(g);
+
+    setInterval(() => {
+      if (hovered || focused || !visible || document.hidden || Date.now() - lastInput < HOLD_AFTER_INPUT_MS) return;
+      const start = slides[0].offsetLeft;
+      const atEnd = g.scrollLeft >= g.scrollWidth - g.clientWidth - 2;
+      const next = atEnd ? slides[0] : slides.find(s => s.offsetLeft - start > g.scrollLeft + 2);
+      g.scrollTo({ left: next.offsetLeft - start, behavior: "smooth" });
+    }, SLIDE_MS);
+  });
+}
