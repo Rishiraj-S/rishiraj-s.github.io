@@ -73,27 +73,40 @@ document.querySelectorAll(".filters").forEach(group => {
   });
 });
 
-// Project galleries auto-advance like a replay reel. Paused while hovered or focused, for a while after
-// the visitor swipes or scrolls it, while off-screen or in a background tab; off for reduced motion.
+// Project galleries: one screenshot at a time, with previous/next buttons and a counter, auto-advancing
+// like a replay reel. Autoplay pauses while hovered or focused, for a while after the visitor swipes,
+// scrolls or uses the buttons, and while off-screen or in a background tab; off for reduced motion.
 const SLIDE_MS = 4500, HOLD_AFTER_INPUT_MS = 8000;
-if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  document.querySelectorAll(".gallery").forEach(g => {
-    const slides = [...g.children];
-    if (slides.length < 2) return;
-    let hovered = false, focused = false, visible = true, lastInput = 0;
-    g.addEventListener("pointerenter", () => hovered = true);
-    g.addEventListener("pointerleave", () => hovered = false);
-    g.addEventListener("focusin", () => focused = true);
-    g.addEventListener("focusout", () => focused = false);
-    ["pointerdown", "wheel", "touchstart", "keydown"].forEach(ev => g.addEventListener(ev, () => lastInput = Date.now(), { passive: true }));
-    new IntersectionObserver(([e]) => visible = e.isIntersecting).observe(g);
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+document.querySelectorAll(".gallery").forEach(g => {
+  const slides = [...g.children];
+  if (slides.length < 2) return;
+  const nav = document.createElement("div");
+  nav.className = "gallery-nav";
+  nav.innerHTML = '<button type="button" aria-label="Previous screenshot">‹</button><span></span><button type="button" aria-label="Next screenshot">›</button>';
+  g.after(nav);
+  const [prev, count, next] = nav.children;
 
-    setInterval(() => {
-      if (hovered || focused || !visible || document.hidden || Date.now() - lastInput < HOLD_AFTER_INPUT_MS) return;
-      const start = slides[0].offsetLeft;
-      const atEnd = g.scrollLeft >= g.scrollWidth - g.clientWidth - 2;
-      const next = atEnd ? slides[0] : slides.find(s => s.offsetLeft - start > g.scrollLeft + 2);
-      g.scrollTo({ left: next.offsetLeft - start, behavior: "smooth" });
-    }, SLIDE_MS);
-  });
-}
+  const step = () => slides[1].offsetLeft - slides[0].offsetLeft;
+  const current = () => Math.round(g.scrollLeft / step());
+  const go = i => g.scrollTo({ left: ((i + slides.length) % slides.length) * step(), behavior: reduceMotion ? "auto" : "smooth" });
+  const label = () => count.textContent = `${current() + 1} / ${slides.length}`;
+  let hovered = false, focused = false, visible = true, lastInput = 0;
+  const input = () => lastInput = Date.now();
+  prev.addEventListener("click", () => { input(); go(current() - 1); });
+  next.addEventListener("click", () => { input(); go(current() + 1); });
+  g.addEventListener("scroll", label, { passive: true });
+  label();
+  if (reduceMotion) return;
+
+  g.addEventListener("pointerenter", () => hovered = true);
+  g.addEventListener("pointerleave", () => hovered = false);
+  g.addEventListener("focusin", () => focused = true);
+  g.addEventListener("focusout", () => focused = false);
+  ["pointerdown", "wheel", "touchstart", "keydown"].forEach(ev => g.addEventListener(ev, input, { passive: true }));
+  new IntersectionObserver(([e]) => visible = e.isIntersecting).observe(g);
+  setInterval(() => {
+    if (hovered || focused || !visible || document.hidden || Date.now() - lastInput < HOLD_AFTER_INPUT_MS) return;
+    go(current() + 1);
+  }, SLIDE_MS);
+});

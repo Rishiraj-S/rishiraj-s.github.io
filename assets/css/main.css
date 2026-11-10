@@ -370,7 +370,7 @@ span.badge { background: var(--tunnel-2); }
 .report-head h1 { margin: 0; font-size: clamp(2rem, 4vw, 3.2rem); }
 
 .gallery {
-  display: grid; grid-auto-flow: column; grid-auto-columns: min(86%, 900px); gap: var(--gap);
+  display: grid; grid-auto-flow: column; grid-auto-columns: 100%; gap: var(--gap);   /* one screenshot at a time */
   overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
   padding-bottom: 12px; margin-bottom: 36px;
   scrollbar-color: var(--tunnel-3) transparent;
@@ -383,8 +383,18 @@ span.badge { background: var(--tunnel-2); }
 .report article h2 { font-size: 1.6rem; line-height: 1.2; margin: 0 0 14px; font-variation-settings: "wdth" 85; }
 .report article p { margin: 0 0 1em; color: #cfd6ee; }
 .report article ul { color: #cfd6ee; padding-left: 20px; }
+.js .gallery { padding-bottom: 0; margin-bottom: 12px; scrollbar-width: none; }   /* JS adds buttons; without JS the scrollbar is the way through */
+.js .gallery::-webkit-scrollbar { display: none; }
 .report article h3, .report article h4 { margin: 1.6em 0 .5em; }
 
+.gallery-nav { display: flex; justify-content: center; align-items: center; gap: 16px; margin-bottom: 36px; }
+.gallery-nav button {
+  width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+  font: inherit; font-size: 1.5rem; line-height: 1; color: var(--floodlight);
+  background: var(--tunnel-2); border: 1px solid var(--tunnel-3);
+}
+.gallery-nav button:hover { border-color: var(--gold); color: var(--gold); }
+.gallery-nav span { min-width: 5ch; text-align: center; color: var(--chalk); font-variant-numeric: tabular-nums; }
 .facts { position: sticky; top: 90px; margin: 0; padding: 18px; background: var(--tunnel-2); border-radius: var(--radius-tile); border-top: 3px solid var(--gold); }
 .facts div { padding: 10px 0; border-bottom: 1px solid var(--tunnel-3); }
 .facts div:last-child { border-bottom: 0; }
