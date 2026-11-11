@@ -1,6 +1,6 @@
 # Rishiraj Sinharay — Portfolio Website
 
-Personal portfolio website for **Rishiraj Sinharay**, a Data Scientist and Sports Analytics professional based in Barcelona, Spain.
+Personal portfolio of **Rishiraj Sinharay**, Research Engineer at the Barcelona Supercomputing Center, working across data engineering, machine learning and sports analytics.
 
 Live site: [rishiraj-s.github.io](https://rishiraj-s.github.io)
 
@@ -8,36 +8,34 @@ Live site: [rishiraj-s.github.io](https://rishiraj-s.github.io)
 
 ## About
 
-This portfolio showcases professional experience, education, and projects across data science, machine learning, generative AI, and sports analytics. Built as a static site deployed via GitHub Pages.
+A static site deployed via GitHub Pages, designed like a football game's main menu: Q/E tabs, tiles you move between with the arrow keys, a yellow focus frame and a controller-prompt bar. The colours come from FC Barcelona's 2025–26 home kit, kept minimal.
+
+Tabs: **Home** (photo, about, career, a slideshow of sports project highlights), **Projects** (filterable by Sports, GenAI and Research), **Tools**, **Career** (transfer history and academy), **Trophies** (certifications and a photo gallery) and **Contact**.
 
 ---
 
-## Featured Projects
+## Projects
 
-| Project | Domain | Stack |
+| Project | Area | Stack |
 |---|---|---|
-| [GenAI Market Intelligence Dashboard](projects/genai-dashboard/) | GenAI / LLM | Python, LLaMA-3.3-70B, FAISS, Streamlit |
-| [OCR-to-LLM Microservice](projects/news-summarizer/) | GenAI / NLP | Rails 8, AWS Textract, Anthropic Claude |
-| [Player Scouting Dashboard](projects/player-scouting-dashboard/) | Sports Analytics | Python, Streamlit, Radar Charts |
-| [Football Event Tagger](tools/event-tagger/) | Sports Analytics | HTML, JavaScript, MediaRecorder API |
-| [3D Tracking Data Visualizer](tools/3d-tracking-viewer/) | Sports Analytics | JavaScript, Three.js, D3-Delaunay |
-| [Voronoi Pitch Mapping Tool](tools/voronoi-pitch-mapper/) | Sports Analytics | JavaScript, OpenCV.js, D3-Delaunay |
-| [Bayer Leverkusen Bundesliga Analysis](projects/bayer-leverkusen/) | Sports Analytics | Python, StatsBomb, mplsoccer |
-| [Leicester City PL Title Analysis](projects/leicester-city/) | Sports Analytics | Python, pandas, matplotlib |
-| [Aitana Bonmatí World Cup Analysis](projects/aitana-bonmati/) | Sports Analytics | Python, StatsBomb |
-| [MDS Minor Thesis — Breast Cancer ML](projects/monash-minor-thesis/) | Machine Learning | Python, scikit-learn |
-| [Spotify Data Visualisation](projects/spotify-data-viz/) | Data Viz | R, ggplot2 |
+| [CuléVision: game analysis tool for FC Barcelona](projects/culevision/) (master's thesis) | Sports, 2026 | Python, Plotly Dash, XGBoost, SHAP, mplsoccer, Selenium Wire, Docker, Google Cloud Run |
+| [Real Madrid player load forecasting (ACWR)](projects/real-madrid-internship/) | Sports, 2026 | Python, XGBoost, scikit-learn, pandas, Streamlit |
+| [Player Scouting Dashboard](projects/player-scouting-dashboard/) | Sports, 2025 | Python, pandas, Plotly, Streamlit |
+| [Aitana Bonmatí at the 2023 World Cup](projects/aitana-bonmati/) | Sports, 2025 | Python, StatsBomb, mplsoccer |
+| [Leicester City's 5000-to-1 title](projects/leicester-city/) | Sports, 2025 | Python, StatsBomb, mplsoccer |
+| [Bayer Leverkusen's unbeaten Bundesliga season](projects/bayer-leverkusen/) | Sports, 2025 | Python, StatsBomb, mplsoccer |
+| [GenAI Market Intelligence Dashboard](projects/genai-dashboard/) | GenAI, 2025 | Python, LLaMA-3.3-70B, FAISS, Streamlit |
+| [News Summarisation and Hindi Text-to-Speech](projects/news-summarizer/) | GenAI, 2025 | Python, Hugging Face, Streamlit |
+| [Predictive biomarkers for FGFR therapy (MDS minor thesis)](projects/monash-minor-thesis/) | Research, 2023 | Python, scikit-learn |
+| [Spotify Streaming Data Analysis](projects/spotify-data-viz/) | Research, 2022 | R, ggplot2 |
 
----
+## Tools
 
-## Tech Stack
-
-- **Languages**: Python, SQL, R, JavaScript
-- **ML / AI**: scikit-learn, LLaMA, Claude (Anthropic), FAISS (RAG)
-- **Data Engineering**: Selenium, BeautifulSoup, SerpAPI, SAP BODS, Apache Hadoop
-- **Visualisation**: Streamlit, Power BI, mplsoccer, matplotlib, Three.js, D3
-- **Cloud**: AWS (Textract, S3), Microsoft Azure
-- **Web**: HTML5, CSS3, JavaScript
+| Tool | What it does | Stack |
+|---|---|---|
+| [3D tracking viewer](tools/3d-tracking-viewer/) | Replays tracking data on a 3D pitch with Voronoi regions | JavaScript, Three.js, D3-Delaunay |
+| [Event tagger](tools/event-tagger/) | Tag match events on video, export to Excel or a highlight cut | HTML, JavaScript, MediaRecorder API |
+| [Voronoi pitch mapper](tools/voronoi-pitch-mapper/) | Map players from a broadcast frame onto a pitch | JavaScript, OpenCV.js, D3-Delaunay |
 
 ---
 
@@ -45,38 +43,41 @@ This portfolio showcases professional experience, education, and projects across
 
 ```
 rishiraj-s.github.io/
-├── index.html                  # Single-page portfolio (home)
+├── index.html                  # Menu hub: Home, Projects, Tools, Career, Trophies, Contact
 ├── thank-you.html              # Contact form redirect target
 ├── projects/                   # Case-study pages, one folder per project
 │   └── <slug>/
 │       ├── index.html          # Served at /projects/<slug>/
-│       └── images/             # Screenshots used by this project only
-├── tools/                      # Standalone interactive apps (own inline CSS/JS)
+│       └── images/             # WebP screenshots and the card cover, this project only
+├── tools/                      # Standalone interactive apps (own inline CSS/JS) + cover.webp
 │   ├── 3d-tracking-viewer/     # + data/ (tracking JSON/JSONL) + football-pitch.png
 │   ├── 3d-goal-simulation/     # Unlisted; + data/ (source parquet)
 │   ├── event-tagger/
 │   └── voronoi-pitch-mapper/
-├── scripts/check-site.py      # Site checks (also run in CI)
-├── _sources/                   # Full-res originals for re-exporting; not published (Jekyll skips _ folders)
-│   ├── photos/
-│   └── logos/
+├── scripts/check-site.py       # Site checks (also run in CI)
+├── _sources/                   # Full-size originals; versioned, not published (Jekyll skips _ folders)
+│   ├── photos/                 # Profile and gallery photos
+│   ├── logos/                  # Employer logos
+│   ├── projects/               # Original project screenshots and posters
+│   └── tools/                  # Original tool covers
 └── assets/                     # Site-wide only
-    ├── css/main.css            # Custom styles (CSS variables for theming)
-    ├── js/main.js              # Tab routing, keyboard navigation, filters
+    ├── css/main.css            # Styles; design tokens (kit colours, font, radii) at the top
+    ├── js/main.js              # Tab routing, keyboard navigation, filters, slideshows
     └── img/
         ├── favicon.ico, favicon.png
-        ├── profile/            # Photos of me used on the site (avatar, card headshot, home background)
-        └── clubs/              # Employer badges, 128px square WebP
+        ├── profile/            # Photos of me used on the site
+        ├── clubs/              # Employer badges, 128px square WebP
+        └── gallery/            # Trophies photo wall
 ```
 
-Each project/tool folder also holds the `cover` image used for its card on the home page.
+Published images are WebP, at most 1,600px on the long edge, with metadata stripped. The full-size originals live in `_sources/`, mirroring the published path, and are never linked from a page.
 Naming: lowercase kebab-case for all folders and files.
 
 ---
 
 ## Local Development
 
-No build system — open files directly or serve locally:
+No build system. Open files directly or serve locally:
 
 ```bash
 python3 -m http.server 8000
@@ -95,7 +96,8 @@ python3 -m http.server 8000
 
 ## Contact
 
-- **Email**: rishiraj1998.rs@gmail.com
+Use the contact form on the [site](https://rishiraj-s.github.io/#contact), or find me on:
+
 - **LinkedIn**: [linkedin.com/in/rishirajsinharay](https://www.linkedin.com/in/rishirajsinharay/)
 - **GitHub**: [github.com/Rishiraj-S](https://github.com/Rishiraj-S)
 - **Medium**: [medium.com/@rishiraj1998.rs](https://medium.com/@rishiraj1998.rs)
