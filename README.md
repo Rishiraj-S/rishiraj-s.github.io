@@ -45,12 +45,15 @@ Tabs: **Home** (photo, about, career, a slideshow of sports project highlights),
 rishiraj-s.github.io/
 ├── index.html                  # Menu hub: Home, Projects, Tools, Career, Trophies, Contact
 ├── thank-you.html              # Contact form redirect target
+├── 404.html                    # Themed not-found page
+├── sitemap.xml, robots.txt     # For search engines
+├── _config.yml                 # Keeps README, CLAUDE.md and scripts/ off the published site
 ├── projects/                   # Case-study pages, one folder per project
 │   └── <slug>/
 │       ├── index.html          # Served at /projects/<slug>/
 │       └── images/             # WebP screenshots and the card cover, this project only
 ├── tools/                      # Standalone interactive apps (own inline CSS/JS) + cover.webp
-│   ├── 3d-tracking-viewer/     # + data/ (tracking JSON/JSONL) + football-pitch.png
+│   ├── 3d-tracking-viewer/     # + data/ (match JSON, gzipped tracking JSONL) + football-pitch.png
 │   ├── 3d-goal-simulation/     # Unlisted; + data/ (source parquet)
 │   ├── event-tagger/
 │   └── voronoi-pitch-mapper/

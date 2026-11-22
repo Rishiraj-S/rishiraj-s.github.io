@@ -1,0 +1,6 @@
+# GitHub Pages (Jekyll) build settings. Pages are plain HTML; this file only keeps
+# repo docs and tooling off the public site. Folders starting with "_" or "." are skipped anyway.
+exclude:
+  - README.md
+  - CLAUDE.md
+  - scripts/
