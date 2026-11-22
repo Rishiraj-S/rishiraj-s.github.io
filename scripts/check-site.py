@@ -40,6 +40,7 @@ class Page(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.refs, self.ids, self.dup_ids, self.missing_alt = [], set(), set(), []
         self.lang = self.title = self.viewport = False
+        self.redirect = False
         self.scripts, self._in_script = [], False
 
     def handle_starttag(self, tag, attrs):
@@ -52,6 +53,8 @@ class Page(HTMLParser):
             self.title = True
         if tag == "meta" and a.get("name") == "viewport":
             self.viewport = True
+        if tag == "meta" and (a.get("http-equiv") or "").lower() == "refresh":
+            self.redirect = True
         if tag == "img" and "alt" not in a:
             self.missing_alt.append(a.get("src", "?"))
         for key in ("src", "href", "poster", "data"):
@@ -159,7 +162,8 @@ def check(root):
                     if r and not exists_exact(root, r[0]):
                         errors.append(f"{rel}: broken url(\"{ref}\")")
         name = rel.rsplit("/", 1)[-1]
-        if not re.match(r"^tools/[^/]+/data/", rel) and name not in NAMING_EXEMPT and not all(KEBAB.match(s) for s in rel.split("/")):
+        legacy_redirect = rel in pages and pages[rel].redirect   # old URLs from the pre-2026 site keep their names
+        if not re.match(r"^tools/[^/]+/data/", rel) and name not in NAMING_EXEMPT and not legacy_redirect and not all(KEBAB.match(s) for s in rel.split("/")):
             errors.append(f"{rel}: not lowercase kebab-case")
         if rel.lower().endswith((".jpg", ".jpeg", ".png", ".webp")) and has_exif(os.path.join(root, rel)):
             errors.append(f"{rel}: image carries EXIF metadata; re-export it stripped")
@@ -197,6 +201,7 @@ def self_test():
         "assets/js/bad.js": "const = ;",
         "_sources/raw.jpg": b"raw",
         "tools/x/data/Provider_File.json": "{}",
+        "old_page.html": good_head.replace("</head>", '<meta http-equiv="refresh" content="0; url=sub/"></head>') + '<body><a href="sub/">moved</a></body></html>',   # legacy redirect: name exempt
     }
     expected = [
         "anchor \"#nope\"", "broken reference \"assets/Logo.png\"", "broken reference \"assets/missing.png\"",

@@ -8,7 +8,11 @@ const backLink = document.querySelector("[data-back]");
 // Items that stagger in when their tab opens (the menu-load effect)
 const CASCADE = ".tile, .about, .history > li, .academy > li, .certs > li, .photo-wall > li, .contact-lines > div, .form > label, .form > .btn";
 
+// Section anchors from the pre-2026 site, so old links like /#portfolio land on the matching tab
+const OLD_ANCHORS = { hero: "home", about: "home", resume: "career", extracurriculars: "career", portfolio: "projects", certifications: "trophies" };
+
 function show(id) {
+  if (OLD_ANCHORS[id]) { id = OLD_ANCHORS[id]; history.replaceState(null, "", "#" + id); }
   const panel = panels.find(p => p.id === id) || panels[0];
   if (!panel) return;
   panels.forEach(p => p.classList.toggle("is-active", p === panel));
