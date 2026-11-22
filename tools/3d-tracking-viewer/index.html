@@ -2241,9 +2241,10 @@
   $("rec3dBtn").addEventListener("click", export3DVideo);
 
   const DEFAULT_MATCH_URL    = "data/2061307_match_data.json";
-  const DEFAULT_TRACKING_URL = "data/2061307_tracking_extrapolated.jsonl";
+  const DEFAULT_TRACKING_URL = "data/2061307_tracking_extrapolated.jsonl.gz";   // gzip: 85 MB -> 7 MB, decompressed while streaming
 
   // Wraps a URL as a File-like object with .stream() backed by fetch.
+  // A .gz URL is decompressed in the browser (Pages serves it as a plain file, without Content-Encoding).
   // Each .stream() call opens a fresh fetch so seek/cancel works correctly.
   function makeStreamableUrl(url) {
     return {
@@ -2253,7 +2254,8 @@
           async start(c) {
             const resp = await fetch(url);
             if (!resp.ok) { c.error(new Error(`HTTP ${resp.status}`)); return; }
-            fetchReader = resp.body.getReader();
+            const body = url.endsWith(".gz") ? resp.body.pipeThrough(new DecompressionStream("gzip")) : resp.body;
+            fetchReader = body.getReader();
             while (true) {
               const { done, value } = await fetchReader.read();
               if (done) { c.close(); break; }
