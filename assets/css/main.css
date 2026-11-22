@@ -339,6 +339,7 @@ span.badge { background: var(--tunnel-2); }
 .form { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
 .form label { display: grid; gap: 6px; font-size: .92rem; color: var(--chalk); }
 .form .wide { grid-column: 1 / -1; }
+.form .honeypot { display: none; }   /* bots fill it, people never see it */
 .form input, .form textarea {
   font: inherit; color: var(--floodlight);
   padding: 10px 12px;

@@ -398,7 +398,10 @@
           </dd></div>
         </dl>
         <form class="form" action="https://formsubmit.co/rishiraj1998.rs@gmail.com" method="POST">
-          <input type="hidden" name="_captcha" value="false">
+          <!-- spam protection: formsubmit's captcha step, plus a honeypot field only bots fill in -->
+          <input type="hidden" name="_captcha" value="true">
+          <input type="text" name="_honey" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <input type="hidden" name="_subject" value="Portfolio: new message">
           <input type="hidden" name="_next" value="https://rishiraj-s.github.io/thank-you.html">
           <label>Name<input type="text" name="name" autocomplete="name" required></label>
           <label>Email<input type="email" name="email" autocomplete="email" required></label>
