@@ -4,6 +4,18 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>3D Tracking Data Visualizer — Football Analytics</title>
+  <link rel="icon" href="../../assets/img/favicon.png">
+  <meta name="description" content="3D tracking viewer: Replay tracking data on a 2D pitch, with Voronoi control zones and a 3D drone camera. Exports to PDF, CSV and XLSX. A browser tool by Rishiraj Sinharay.">
+  <link rel="canonical" href="https://rishiraj-s.github.io/tools/3d-tracking-viewer/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Rishiraj Sinharay">
+  <meta property="og:title" content="3D Tracking Data Visualizer — Football Analytics">
+  <meta property="og:description" content="3D tracking viewer: Replay tracking data on a 2D pitch, with Voronoi control zones and a 3D drone camera. Exports to PDF, CSV and XLSX. A browser tool by Rishiraj Sinharay.">
+  <meta property="og:url" content="https://rishiraj-s.github.io/tools/3d-tracking-viewer/">
+  <meta property="og:image" content="https://rishiraj-s.github.io/tools/3d-tracking-viewer/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
 
   <!-- jsPDF (CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
@@ -2229,9 +2241,10 @@
   $("rec3dBtn").addEventListener("click", export3DVideo);
 
   const DEFAULT_MATCH_URL    = "data/2061307_match_data.json";
-  const DEFAULT_TRACKING_URL = "data/2061307_tracking_extrapolated.jsonl";
+  const DEFAULT_TRACKING_URL = "data/2061307_tracking_extrapolated.jsonl.gz";   // gzip: 85 MB -> 7 MB, decompressed while streaming
 
   // Wraps a URL as a File-like object with .stream() backed by fetch.
+  // A .gz URL is decompressed in the browser (Pages serves it as a plain file, without Content-Encoding).
   // Each .stream() call opens a fresh fetch so seek/cancel works correctly.
   function makeStreamableUrl(url) {
     return {
@@ -2241,7 +2254,8 @@
           async start(c) {
             const resp = await fetch(url);
             if (!resp.ok) { c.error(new Error(`HTTP ${resp.status}`)); return; }
-            fetchReader = resp.body.getReader();
+            const body = url.endsWith(".gz") ? resp.body.pipeThrough(new DecompressionStream("gzip")) : resp.body;
+            fetchReader = body.getReader();
             while (true) {
               const { done, value } = await fetchReader.read();
               if (done) { c.close(); break; }
@@ -2308,6 +2322,9 @@
 })();
 </script>
   <button onclick=”hideLabel()”> Hide label </button>
+
+  <!-- way back to the portfolio; inline-styled because tools don't load the site stylesheet -->
+  <a href="../../index.html#tools" style="position:fixed;left:16px;bottom:16px;z-index:9999;padding:8px 14px;border-radius:999px;background:#0a0e29;color:#eef2ff;border:1px solid #24378f;box-shadow:0 4px 14px rgba(0,0,0,.35);font:600 14px/1.2 system-ui,sans-serif;text-decoration:none">&larr; Portfolio</a>
 </body>
 </html>
 

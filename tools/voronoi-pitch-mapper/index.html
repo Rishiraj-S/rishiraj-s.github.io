@@ -3,6 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <title>Voronoi Tool — Map players to pitch</title>
+  <link rel="icon" href="../../assets/img/favicon.png">
+  <meta name="description" content="Voronoi pitch mapper: Map player and ball positions from a broadcast frame onto a pitch and see each player&#x27;s territory. A browser tool by Rishiraj Sinharay.">
+  <link rel="canonical" href="https://rishiraj-s.github.io/tools/voronoi-pitch-mapper/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Rishiraj Sinharay">
+  <meta property="og:title" content="Voronoi Tool — Map players to pitch">
+  <meta property="og:description" content="Voronoi pitch mapper: Map player and ball positions from a broadcast frame onto a pitch and see each player&#x27;s territory. A browser tool by Rishiraj Sinharay.">
+  <meta property="og:url" content="https://rishiraj-s.github.io/tools/voronoi-pitch-mapper/">
+  <meta property="og:image" content="https://rishiraj-s.github.io/tools/voronoi-pitch-mapper/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
     body { 
@@ -241,7 +253,7 @@
     <div class="header-description" id="description">Upload a match image and a top-down pitch image, pick matching points and then mark players + ball.</div>
     <div class="attribution" id="attributionText">
       This tool is an extension of the tool built by Anselmo Ruiz de Alarcón Quintero 
-      <a href="https://www.anselmoraqsoccer.com/diapositivas" target="_blank">@anselmoraq</a>.
+      <a href="https://www.anselmoraqsoccer.com/" target="_blank">@anselmoraq</a>.
     </div>
   </div>
   <div class="language-selector">
@@ -383,7 +395,7 @@ let imgJuego = new Image(), imgTerreno = new Image();
 const texts = {
   en: {
     description: "Upload a match image and a top-down pitch image, pick matching points and then mark players + ball.",
-    attribution: "This tool is an extension of the tool built by Anselmo Ruiz de Alarcón Quintero <a href=\"https://www.anselmoraqsoccer.com/diapositivas\" target=\"_blank\">@anselmoraq</a>.",
+    attribution: "This tool is an extension of the tool built by Anselmo Ruiz de Alarcón Quintero <a href=\"https://www.anselmoraqsoccer.com/\" target=\"_blank\">@anselmoraq</a>.",
     img1info: "Upload game image",
     img2info: "Upload pitch image",
     localPlayersLabel: "Number of Local Players Visible:",
@@ -419,7 +431,7 @@ const texts = {
   },
   es: {
     description: "Suba una imagen de juego y una imagen de terreno, seleccione puntos equivalentes y luego marque jugadores + balón.",
-    attribution: "Esta herramienta es una extensión de la herramienta construida por Anselmo Ruiz de Alarcón Quintero <a href=\"https://www.anselmoraqsoccer.com/diapositivas\" target=\"_blank\">@anselmoraq</a>.",
+    attribution: "Esta herramienta es una extensión de la herramienta construida por Anselmo Ruiz de Alarcón Quintero <a href=\"https://www.anselmoraqsoccer.com/\" target=\"_blank\">@anselmoraq</a>.",
     img1info: "Introduzca imagen de juego",
     img2info: "Introduzca imagen de terreno",
     localPlayersLabel: "Número de Jugadores Locales Visibles:",
@@ -742,5 +754,8 @@ window.Module = {
 };
 </script>
 
+
+  <!-- way back to the portfolio; inline-styled because tools don't load the site stylesheet -->
+  <a href="../../index.html#tools" style="position:fixed;left:16px;bottom:16px;z-index:9999;padding:8px 14px;border-radius:999px;background:#0a0e29;color:#eef2ff;border:1px solid #24378f;box-shadow:0 4px 14px rgba(0,0,0,.35);font:600 14px/1.2 system-ui,sans-serif;text-decoration:none">&larr; Portfolio</a>
 </body>
 </html>

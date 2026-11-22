@@ -44,7 +44,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-img { max-width: 100%; display: block; }
+img { max-width: 100%; height: auto; display: block; }   /* width/height attributes then only reserve the aspect ratio */
 a { color: inherit; }
 p a, dd a, li a { color: var(--gold); text-underline-offset: 3px; }
 
@@ -339,6 +339,7 @@ span.badge { background: var(--tunnel-2); }
 .form { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
 .form label { display: grid; gap: 6px; font-size: .92rem; color: var(--chalk); }
 .form .wide { grid-column: 1 / -1; }
+.form .honeypot { display: none; }   /* bots fill it, people never see it */
 .form input, .form textarea {
   font: inherit; color: var(--floodlight);
   padding: 10px 12px;
@@ -354,6 +355,8 @@ span.badge { background: var(--tunnel-2); }
   border: 0; border-radius: var(--radius-chip); cursor: pointer; text-decoration: none;
 }
 .btn .kbd { border-color: var(--gold-ink); color: var(--gold-ink); }
+.btn-quiet { color: var(--floodlight); background: var(--tunnel-2); box-shadow: inset 0 0 0 1px var(--tunnel-3); }
+.not-found-links { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; }
 
 /* ---------- prompt bar (controller hints) ---------- */
 

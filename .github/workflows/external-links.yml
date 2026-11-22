@@ -1,0 +1,22 @@
+# Weekly check that outside links (GitHub repos, Medium, live apps) still resolve.
+# Runs on a schedule rather than on push: other sites change on their own, and network
+# checks are too flaky to block a commit. GitHub emails the repo owner when a scheduled run fails.
+# Sites that refuse bots (LinkedIn 999, Medium 403) are reported as warnings, not failures.
+name: External links
+
+on:
+  schedule:
+    - cron: "0 7 * * 1"   # Mondays 07:00 UTC
+  workflow_dispatch:
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check outside links
+        run: python3 scripts/check-site.py --external
