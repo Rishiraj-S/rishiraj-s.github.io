@@ -18,8 +18,9 @@ Project/tool pages use relative paths (`../../assets/`) — they must be served 
 Run before every commit; CI (`.github/workflows/checks.yml`) runs the same on every push and PR:
 
 ```bash
-python3 scripts/check-site.py              # links, anchors, html basics, naming, EXIF, file sizes, JS syntax
+python3 scripts/check-site.py              # links, anchors, html basics, naming, EXIF, file sizes, JS syntax, SEO tags, sitemap
 python3 scripts/check-site.py --self-test  # proves each check catches a planted fault
+python3 scripts/check-site.py --external   # outside links (network); runs weekly in CI, LinkedIn/Medium bot-blocks are warnings
 ```
 
 Standard library only. When adding a new kind of check, add a planted fault for it to `self_test()`.
